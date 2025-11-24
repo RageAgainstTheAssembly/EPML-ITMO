@@ -17,7 +17,7 @@ This is just a brief README, you can find the full report in `docs/report.md`
 
 ```bash
 git clone https://github.com/RageAgainstTheAssembly/EPML-ITMO
-cd epml_itmo
+cd EPML_ITMO
 
 pip install --user poetry
 poetry config virtualenvs.in-project true

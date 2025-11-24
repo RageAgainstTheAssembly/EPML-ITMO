@@ -55,7 +55,7 @@ Installing from scratch:
 
 ```bash
 git clone https://github.com/RageAgainstTheAssembly/EPML-ITMO
-cd epml_itmo
+cd EPML_ITMO
 poetry install
 ```
 
@@ -129,7 +129,7 @@ This should train the model and print its metrics to console
 ```bash
 # 1. Clone
 git clone https://github.com/RageAgainstTheAssembly/EPML-ITMO
-cd epml_itmo
+cd EPML_ITMO
 
 # 2. Poetry
 pip install --user poetry

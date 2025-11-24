@@ -10,12 +10,12 @@ class ProjectPaths:
     """Common project paths resolved from this file location."""
 
     root: Path = Path(__file__).resolve().parents[1]
-    data_raw: Path = root / "data" / "raw"
+    data_external: Path = root / "data" / "external"
     models_dir: Path = root / "models"
 
     @property
     def wine_csv(self) -> Path:
-        return self.data_raw / "WineQT.csv"
+        return self.data_external / "WineQT.csv"
 
 
 @dataclass(frozen=True)
