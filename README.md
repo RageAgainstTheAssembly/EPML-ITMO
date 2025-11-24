@@ -1,60 +1,80 @@
-# epml
 
-<a target="_blank" href="https://cookiecutter-data-science.drivendata.org/">
-    <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
-</a>
+# EPML HW 1
 
-A short description of the project.
+- Cookiecutter for the overall template
+- Poetry for dependencies, convenient setup with pyproject
+- Pre-commit hooks and linting (Black, isort, Ruff, MyPy, Bandit)
+- `wine_predictor` as a package
+- Jupyter notebook solution using that package
+- Docker reproducibility
 
-## Project Organization
 
-```
-├── LICENSE            <- Open-source license if one is chosen
-├── Makefile           <- Makefile with convenience commands like `make data` or `make train`
-├── README.md          <- The top-level README for developers using this project.
-├── data
-│   ├── external       <- Data from third party sources.
-│   ├── interim        <- Intermediate data that has been transformed.
-│   ├── processed      <- The final, canonical data sets for modeling.
-│   └── raw            <- The original, immutable data dump.
-│
-├── docs               <- A default mkdocs project; see www.mkdocs.org for details
-│
-├── models             <- Trained and serialized models, model predictions, or model summaries
-│
-├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-│                         the creator's initials, and a short `-` delimited description, e.g.
-│                         `1.0-jqp-initial-data-exploration`.
-│
-├── pyproject.toml     <- Project configuration file with package metadata for
-│                         wine_predictor and configuration for tools like black
-│
-├── references         <- Data dictionaries, manuals, and all other explanatory materials.
-│
-├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-│   └── figures        <- Generated graphics and figures to be used in reporting
-│
-├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-│                         generated with `pip freeze > requirements.txt`
-│
-├── setup.cfg          <- Configuration file for flake8
-│
-└── wine_predictor   <- Source code for use in this project.
-    │
-    ├── __init__.py             <- Makes wine_predictor a Python module
-    │
-    ├── config.py               <- Store useful variables and configuration
-    │
-    ├── dataset.py              <- Scripts to download or generate data
-    │
-    ├── features.py             <- Code to create features for modeling
-    │
-    ├── modeling
-    │   ├── __init__.py
-    │   ├── predict.py          <- Code to run model inference with trained models
-    │   └── train.py            <- Code to train models
-    │
-    └── plots.py                <- Code to create visualizations
+## Quick Start
+
+### 1. Install Poetry and dependencies
+
+```bash
+git clone <repo_url>
+cd epml_itmo
+
+pip install --user poetry
+poetry config virtualenvs.in-project true
+
+poetry install
 ```
 
---------
+### 2. Code quality checks
+
+```bash
+poetry run pre-commit install
+poetry run pre-commit run --all-files
+```
+
+---
+
+## Baseline Model
+
+Impelented in the `wine_predictor` package.
+
+To train and evaluate the model:
+
+```bash
+poetry run python -m wine_predictor.modeling.train
+```
+
+This will:
+
+* Load dataset
+* Split into train/test
+* Train a basic logistic regression model
+* Print metrics
+
+## Jupyter Notebooks
+
+To run:
+
+```bash
+poetry add --group dev jupyterlab ipykernel
+poetry run python -m ipykernel install --user --name epml-wine --display-name "Python (epml_itmo)"
+poetry run jupyter lab
+```
+
+Use the kernel **“Python (epml_itmo)”** and open:
+
+* `notebooks/solution.ipynb`
+
+## Docker
+
+Build and run the container:
+
+```bash
+docker build -t epml-wine:dev .
+docker run --rm epml-wine:dev
+```
+
+The container runs the same baseline training (`wine_predictor.modeling.train`)
+
+
+## Full Report
+
+* `reports/report.md`
