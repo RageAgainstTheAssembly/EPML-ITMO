@@ -31,3 +31,32 @@ dev = [
     "bandit (>=1.9.2,<2.0.0)",
     "pre-commit (>=4.5.0,<5.0.0)"
 ]
+
+[tool.black]
+line-length = 88
+target-version = ["py312"]
+exclude = ["data", "models", "notebooks", ".venv"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+multi_line_output = 3
+skip = ["data", "models", "notebooks", ".venv"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+extend-select = ["I"]
+exclude = ["data", "models", "notebooks", ".venv"]
+
+[tool.mypy]
+python_version = "3.12"
+ignore_missing_imports = true
+disallow_untyped_defs = true
+check_untyped_defs = true
+show_error_codes = true
+exclude = "data|models|notebooks|.venv"
+
+[tool.bandit]
+skips = ["B101"]
+
