@@ -14,7 +14,7 @@
 ### 1. Install Poetry and dependencies
 
 ```bash
-git clone <repo_url>
+git clone https://github.com/RageAgainstTheAssembly/EPML-ITMO
 cd epml_itmo
 
 pip install --user poetry

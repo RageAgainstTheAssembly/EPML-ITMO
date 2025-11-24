@@ -54,7 +54,7 @@ It contains:
 Installing from scratch:
 
 ```bash
-git clone <repo_url>
+git clone https://github.com/RageAgainstTheAssembly/EPML-ITMO
 cd epml_itmo
 poetry install
 ```
