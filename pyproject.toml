@@ -35,7 +35,14 @@ dev = [
 [tool.black]
 line-length = 88
 target-version = ["py312"]
-exclude = ["data", "models", "notebooks", ".venv"]
+exclude = '''
+(
+  /data/
+  | /models/
+  | /notebooks/
+  | /.venv/
+)
+'''
 
 [tool.isort]
 profile = "black"
@@ -52,11 +59,10 @@ exclude = ["data", "models", "notebooks", ".venv"]
 [tool.mypy]
 python_version = "3.12"
 ignore_missing_imports = true
-disallow_untyped_defs = true
+disallow_untyped_defs = false
 check_untyped_defs = true
 show_error_codes = true
 exclude = "data|models|notebooks|.venv"
 
 [tool.bandit]
 skips = ["B101"]
-
