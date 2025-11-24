@@ -1,32 +1,49 @@
+from __future__ import annotations
+
+from dataclasses import dataclass, field
 from pathlib import Path
+from typing import List
 
-from dotenv import load_dotenv
-from loguru import logger
 
-# Load environment variables from .env file if it exists
-load_dotenv()
+@dataclass(frozen=True)
+class ProjectPaths:
+    """Common project paths resolved from this file location."""
 
-# Paths
-PROJ_ROOT = Path(__file__).resolve().parents[1]
-logger.info(f"PROJ_ROOT path is: {PROJ_ROOT}")
+    root: Path = Path(__file__).resolve().parents[1]
+    data_raw: Path = root / "data" / "raw"
+    models_dir: Path = root / "models"
 
-DATA_DIR = PROJ_ROOT / "data"
-RAW_DATA_DIR = DATA_DIR / "raw"
-INTERIM_DATA_DIR = DATA_DIR / "interim"
-PROCESSED_DATA_DIR = DATA_DIR / "processed"
-EXTERNAL_DATA_DIR = DATA_DIR / "external"
+    @property
+    def wine_csv(self) -> Path:
+        return self.data_raw / "WineQT.csv"
 
-MODELS_DIR = PROJ_ROOT / "models"
 
-REPORTS_DIR = PROJ_ROOT / "reports"
-FIGURES_DIR = REPORTS_DIR / "figures"
+@dataclass(frozen=True)
+class TrainingConfig:
+    """Configuration for baseline wine quality model training."""
 
-# If tqdm is installed, configure loguru with tqdm.write
-# https://github.com/Delgan/loguru/issues/135
-try:
-    from tqdm import tqdm
+    paths: ProjectPaths = field(default_factory=ProjectPaths)
 
-    logger.remove(0)
-    logger.add(lambda msg: tqdm.write(msg, end=""), colorize=True)
-except ModuleNotFoundError:
-    pass
+    feature_cols: List[str] = field(
+        default_factory=lambda: [
+            "fixed acidity",
+            "volatile acidity",
+            "citric acid",
+            "residual sugar",
+            "chlorides",
+            "free sulfur dioxide",
+            "total sulfur dioxide",
+            "density",
+            "pH",
+            "sulphates",
+            "alcohol",
+        ]
+    )
+    target_col: str = "quality"
+
+    test_size: float = 0.2
+    random_state: int = 42
+
+
+PATHS = ProjectPaths()
+TRAINING_CONFIG = TrainingConfig()

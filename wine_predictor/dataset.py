@@ -1,29 +1,31 @@
+from __future__ import annotations
+
 from pathlib import Path
 
-from loguru import logger
-from tqdm import tqdm
-import typer
+import pandas as pd
 
-from wine_predictor.config import PROCESSED_DATA_DIR, RAW_DATA_DIR
-
-app = typer.Typer()
+from .config import TRAINING_CONFIG, TrainingConfig
 
 
-@app.command()
-def main(
-    # ---- REPLACE DEFAULT PATHS AS APPROPRIATE ----
-    input_path: Path = RAW_DATA_DIR / "dataset.csv",
-    output_path: Path = PROCESSED_DATA_DIR / "dataset.csv",
-    # ----------------------------------------------
-):
-    # ---- REPLACE THIS WITH YOUR OWN CODE ----
-    logger.info("Processing dataset...")
-    for i in tqdm(range(10), total=10):
-        if i == 5:
-            logger.info("Something happened for iteration 5.")
-    logger.success("Processing dataset complete.")
-    # -----------------------------------------
+def load_wine_data(config: TrainingConfig = TRAINING_CONFIG) -> pd.DataFrame:
+    """Load WineQT dataset from disk and perform basic validation."""
+    csv_path: Path = config.paths.wine_csv
 
+    if not csv_path.exists():
+        raise FileNotFoundError(
+            f"WineQT.csv not found at {csv_path}. "
+            "Make sure the file is placed in data/raw/WineQT.csv"
+        )
 
-if __name__ == "__main__":
-    app()
+    df = pd.read_csv(csv_path)
+
+    required_cols = set(config.feature_cols + [config.target_col])
+    missing = required_cols - set(df.columns)
+
+    if missing:
+        raise ValueError(
+            f"Missing expected columns in WineQT.csv: {sorted(missing)}. "
+            f"Available columns: {sorted(df.columns)}"
+        )
+
+    return df
