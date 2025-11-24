@@ -128,7 +128,7 @@ This should train the model and print its metrics to console
 
 ```bash
 # 1. Clone
-git clone <repo_url>
+git clone https://github.com/RageAgainstTheAssembly/EPML-ITMO
 cd epml_itmo
 
 # 2. Poetry

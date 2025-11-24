@@ -1,6 +1,8 @@
 
 # EPML HW 1
 
+This is just a brief README, you can find the full report in `docs/report.md`
+
 - Cookiecutter for the overall template
 - Poetry for dependencies, convenient setup with pyproject
 - Pre-commit hooks and linting (Black, isort, Ruff, MyPy, Bandit)
@@ -77,4 +79,4 @@ The container runs the same baseline training (`wine_predictor.modeling.train`)
 
 ## Full Report
 
-* `reports/report.md`
+* `docs/report.md`
