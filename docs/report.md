@@ -10,6 +10,7 @@ The point of HW 1 is setting up a proper data science project environment and st
 - `wine_predictor` as a package
 - Jupyter notebook solution using that package
 - Docker reproducibility
+- Git usage: starting out with pushing changes to `develop` branch, testing docker on `feature/docker`, finally pushing to `main`
 
 #### A few notes on the specifics:
 - We use Wine Quality prediction as an example
@@ -152,3 +153,4 @@ poetry run jupyter lab
 docker build -t epml-wine:dev .
 docker run --rm epml-wine:dev
 ```
+
