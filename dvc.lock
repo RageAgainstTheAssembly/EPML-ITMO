@@ -17,14 +17,22 @@ stages:
       size: 418
     - path: wine_predictor/modeling/train.py
       hash: md5
-      md5: f56e268b4143e64cd9dc483953bb39b4
-      size: 2346
+      md5: 26c3b1f2e118fd47f2841c592a26a6ad
+      size: 3145
+    params:
+      params.yaml:
+        model:
+          max_iter: 500
+          C: 1.0
+          multi_class: auto
+          random_state: 42
+          test_size: 0.25
     outs:
     - path: metrics.json
       hash: md5
-      md5: ab207ba7392203c8d6d7b93e7fec6731
+      md5: 54c21410fc1a14228c8d852d4843e988
       size: 36
     - path: models/baseline_logreg.joblib
       hash: md5
-      md5: d548766728ccf87edb3deebf6e6c7622
+      md5: 7f14c1073fcaecf78efe80091ca8be38
       size: 2617

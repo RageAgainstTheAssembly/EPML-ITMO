@@ -1,8 +1,9 @@
-# HW 1
+# HW 2
 
 ## 1. Overview
 
-The point of HW 1 is setting up a proper data science project environment and structure:
+The point of HW 2 is setting DVC-based data and model versioning + reproducibility.
+Also, from HW 1 we inherit:
 
 - Cookiecutter for the overall template
 - Poetry for dependencies, convenient setup with pyproject
@@ -19,6 +20,7 @@ The point of HW 1 is setting up a proper data science project environment and st
 - A few folders from the template (e.g. `data/processed`) were kept even though they are not currently used in case we need them in the future
 - We don't actually make and plots or figures, but keep those folders for the reason mentioned above
 - Detailed tool configs can be found in the corresponding files (mainly `pyproject.toml`)
+- Why DVC? Seemed versatile and simple enough. I like the parallels between DVC and Git.
 
 
 ## 2. Project Structure
@@ -108,7 +110,6 @@ poetry run jupyter lab
 ## 7. Docker
 
 
-
 We provide a simple `Dockerfile` in the project root
 
 To build and run:
@@ -118,10 +119,57 @@ docker build -t epml-wine:dev .
 
 docker run --rm epml-wine:dev
 ```
-This should train the model and print its metrics to console
+This should train the model and print its metrics to console.
+Note that the docker image works as a demo, we didn't change it to use DVC itself.
 
 ![Build](./figures/docker_build.png)
 ![Build](./figures/docker_run.png)
+
+
+## 8. Versioning tools
+DVC was chosen because it's very versatile and also more distinct than Git LFS, which I already have some experience with.
+We use DVC for both data and model versioning, while also tracking hyperparams and metrics.
+
+## 9. Data versioning
+We use a local remote to keep track of our only dataset - WineQT.csv
+
+## 10. Model versioning and hyperparams
+Model and training hyperparams are contained in params.yaml.
+Example:
+```yaml
+model:
+  max_iter: 1000
+  C: 1.0
+  multi_class: auto
+  random_state: 42
+  test_size: 0.2
+```
+The core training script `wine_predictor/modeling/train.py` loads these params, trains the model accordingly and saves the artifacts for DVC:
+
+1. models/baseline_logreg.joblib – trained model
+
+2. metrics.json – evaluation metrics
+
+We define a `train` stage in `dvc.yaml`:
+```bash
+poetry run dvc stage add -f -n train \
+  -d data/external/WineQT.csv \
+  -d wine_predictor/dataset.py \
+  -d wine_predictor/features.py \
+  -d wine_predictor/modeling/train.py \
+  -p model \
+  -o models/baseline_logreg.joblib \
+  -M metrics.json \
+  poetry run python -m wine_predictor.modeling.train
+```
+
+## 10. Reproducing experiments and tracking metrics
+To inspect and compare metrics:
+```bash
+poetry run dvc metrics show
+poetry run dvc metrics diff HEAD~1
+```
+![DVC](./figures/dvc_diff.png)
 
 
 ## 8. Reproducing everything
@@ -143,13 +191,20 @@ poetry install
 poetry run pre-commit install
 poetry run pre-commit run --all-files
 
-# 5. Run baseline model from package
-poetry run python -m wine_predictor.modeling.train
+# 5. Get data and model artifacts from DVC remote (this assumes you have access to the remote)
+poetry run dvc pull
 
-# 6. (Optional) Start JupyterLab
+# 6. Reproduce the training pipeline from DVC
+poetry run dvc repro
+
+# 7. Compare versions
+poetry run dvc metrics show
+poetry run dvc metrics diff
+
+# 8. (Optional) Start JupyterLab
 poetry run jupyter lab
 
-# 7. (Optional) Docker
+# 9. (Optional) Docker
 docker build -t epml-wine:dev .
 docker run --rm epml-wine:dev
 ```
