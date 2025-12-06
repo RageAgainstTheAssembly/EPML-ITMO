@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
+import joblib
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from sklearn.model_selection import train_test_split
@@ -63,6 +67,22 @@ def train_baseline(
 
     print("Confusion matrix:")
     print(confusion_matrix(y_test, y_pred))
+
+    models_dir = Path("models")
+    models_dir.mkdir(parents=True, exist_ok=True)
+    model_path = models_dir / "baseline_logreg.joblib"
+    joblib.dump(model, model_path)
+    print(f"\nSaved model to: {model_path}")
+
+    metrics = {
+        "accuracy": float(acc),
+    }
+
+    metrics_path = Path("metrics.json")
+    with metrics_path.open("w", encoding="utf-8") as f:
+        json.dump(metrics, f, indent=2)
+
+    print(f"Saved metrics to: {metrics_path}")
 
     return model
 
