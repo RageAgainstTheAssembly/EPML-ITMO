@@ -1,0 +1,13 @@
+stages:
+  train:
+    cmd: poetry run python -m wine_predictor.modeling.train
+    deps:
+    - data/external/WineQT.csv
+    - wine_predictor/dataset.py
+    - wine_predictor/features.py
+    - wine_predictor/modeling/train.py
+    outs:
+    - models/baseline_logreg.joblib
+    metrics:
+    - metrics.json:
+        cache: false
