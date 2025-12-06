@@ -1,0 +1,30 @@
+schema: '2.0'
+stages:
+  train:
+    cmd: poetry run python -m wine_predictor.modeling.train
+    deps:
+    - path: data/external/WineQT.csv
+      hash: md5
+      md5: e2e57e4c41e6ee0213fb12e5a70f4bfb
+      size: 78057
+    - path: wine_predictor/dataset.py
+      hash: md5
+      md5: 408c6e356f55a9af4d8be26e6a8f1be7
+      size: 864
+    - path: wine_predictor/features.py
+      hash: md5
+      md5: ec9e4ddb5a779d9d607a104aae9e6110
+      size: 418
+    - path: wine_predictor/modeling/train.py
+      hash: md5
+      md5: f56e268b4143e64cd9dc483953bb39b4
+      size: 2346
+    outs:
+    - path: metrics.json
+      hash: md5
+      md5: ab207ba7392203c8d6d7b93e7fec6731
+      size: 36
+    - path: models/baseline_logreg.joblib
+      hash: md5
+      md5: d548766728ccf87edb3deebf6e6c7622
+      size: 2617
