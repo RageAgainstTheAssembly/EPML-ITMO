@@ -178,7 +178,8 @@ poetry run dvc metrics diff HEAD~1
 ```bash
 # 1. Clone
 git clone https://github.com/RageAgainstTheAssembly/EPML-ITMO
-cd EPML_ITMO
+cd EPML-ITMO
+git checkout main_hw2
 
 # 2. Poetry
 pip install --user poetry
@@ -192,6 +193,7 @@ poetry run pre-commit install
 poetry run pre-commit run --all-files
 
 # 5. Get data and model artifacts from DVC remote (this assumes you have access to the remote)
+poetry run dvc remote modify local_remote url <insert your remote path>
 poetry run dvc pull
 
 # 6. Reproduce the training pipeline from DVC

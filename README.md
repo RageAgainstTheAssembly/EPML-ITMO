@@ -15,7 +15,7 @@ Perfectly reproducible on my machine, hoping that's a good sign
 - DVC experiment reproducibility
 
 
-## Quick Start (from HW 1)
+## Basic Quick Start (from HW 1)
 
 ### 1. Install Poetry and dependencies
 
