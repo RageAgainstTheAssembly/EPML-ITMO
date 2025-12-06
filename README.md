@@ -1,7 +1,7 @@
 
-# EPML HW 1
+# EPML HW 2
 
-This is just a brief README, you can find the full report in `docs/report.md`
+This is just a brief README, you can find the full report in `docs/report.md`. Note that versioning mostly concerns sections 8-12.
 
 Perfectly reproducible on my machine, hoping that's a good sign
 
@@ -11,9 +11,11 @@ Perfectly reproducible on my machine, hoping that's a good sign
 - `wine_predictor` as a package
 - Jupyter notebook solution using that package
 - Docker reproducibility
+- DVC data, model, hyperparams and metrics tracking
+- DVC experiment reproducibility
 
 
-## Quick Start
+## Quick Start (from HW 1)
 
 ### 1. Install Poetry and dependencies
 

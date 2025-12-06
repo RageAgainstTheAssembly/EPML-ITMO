@@ -163,7 +163,7 @@ poetry run dvc stage add -f -n train \
   poetry run python -m wine_predictor.modeling.train
 ```
 
-## 10. Reproducing experiments and tracking metrics
+## 11. Reproducing experiments and tracking metrics
 To inspect and compare metrics:
 ```bash
 poetry run dvc metrics show
@@ -172,7 +172,7 @@ poetry run dvc metrics diff HEAD~1
 ![DVC](./figures/dvc_diff.png)
 
 
-## 8. Reproducing everything
+## 12. Reproducing everything
 
 
 ```bash
