@@ -15,6 +15,7 @@ from sklearn.preprocessing import StandardScaler
 from ..config import TRAINING_CONFIG, TrainingConfig
 from ..dataset import load_wine_data
 from ..features import create_features_and_target
+from ..mlflow_utils import training_run
 
 
 def load_params(path: str | Path = "params.yaml") -> Dict[str, Any]:
@@ -50,17 +51,12 @@ def build_logreg_pipeline(model_params: Dict[str, Any] | None = None) -> Pipelin
     )
 
 
+@training_run(run_name="baseline_logreg")
 def train_baseline(
     *,
     config: TrainingConfig = TRAINING_CONFIG,
-) -> Pipeline:
-    """Train a baseline logistic regression model on WineQT.csv.
-
-    Returns
-    -------
-    Pipeline
-        Trained sklearn Pipeline (StandardScaler + LogisticRegression).
-    """
+) -> Dict[str, Any]:
+    """Train a baseline logistic regression model"""
     params = load_params()
     model_params: Dict[str, Any] = params.get("model", {})
 
@@ -107,7 +103,20 @@ def train_baseline(
         json.dump(metrics, f, indent=2)
     print(f"Saved metrics to: {metrics_path}")
 
-    return model
+    return {
+        "model": model,
+        "params": {
+            **model_params,
+            "test_size": test_size,
+            "random_state": random_state,
+            "model_type": "logreg",
+        },
+        "metrics": metrics,
+        "artifacts": {
+            "model_path": str(model_path),
+            "metrics_path": str(metrics_path),
+        },
+    }
 
 
 if __name__ == "__main__":
