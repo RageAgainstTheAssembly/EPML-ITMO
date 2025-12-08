@@ -1,9 +1,9 @@
-# HW 2
+# HW 3
 
 ## 1. Overview
 
-The point of HW 2 is setting DVC-based data and model versioning + reproducibility.
-Also, from HW 1 we inherit:
+The point of HW 3 is setting up MLFlow-based logging and experiment tracking for our existing project.
+Also, from previous stages we inherit:
 
 - Cookiecutter for the overall template
 - Poetry for dependencies, convenient setup with pyproject
@@ -12,6 +12,12 @@ Also, from HW 1 we inherit:
 - Jupyter notebook solution using that package
 - Docker reproducibility
 - Git usage: starting out with pushing changes to `develop` branch, testing docker on `feature/docker`, finally pushing to `main`
+- DVC-based data and model versioning
+
+In this HW we add:
+- MLFLOW experiment tracking
+- Utils for running a grid of experiments with different models and hyperparams for comparison
+- MLFlow logging: metrics, parameters and artifacts
 
 #### A few notes on the specifics:
 - We use Wine Quality prediction as an example
@@ -21,14 +27,15 @@ Also, from HW 1 we inherit:
 - We don't actually make and plots or figures, but keep those folders for the reason mentioned above
 - Detailed tool configs can be found in the corresponding files (mainly `pyproject.toml`)
 - Why DVC? Seemed versatile and simple enough. I like the parallels between DVC and Git.
+- Why MLFlow? I've already used W&B and TensorBoard. MLFlow was something I've been wanting to try for a while.
 
 
-## 2. Project Structure
+## 2. Project structure
 
 
 ![Tree](./figures/tree.png)
 
-## 3. Dependency Management
+## 3. Dependency management
 
 ### 3.1 Poetry
 
@@ -64,7 +71,7 @@ poetry install
 
 ---
 
-## 4. Formatters, Linters, Pre-commit hooks
+## 4. Formatters, linters, pre-commit hooks
 
 
 * Black – code formatter
@@ -85,7 +92,7 @@ poetry run pre-commit run --all-files
 ![Hooks](./figures/hooks.png)
 
 
-## 5. Actual ML Solution
+## 5. Actual ML solution
 
 ### 5.1 Implementation
 Won't be going into detail - it's essentially a basic SKLearn pipeline with a Logistic Regression classifier. Training a great ML model is not the point of this homework
@@ -95,7 +102,7 @@ Won't be going into detail - it's essentially a basic SKLearn pipeline with a Lo
 Solution in `notebooks/solution.ipynb` uses the package code to run training and inference.
 
 
-## 6. Jupyter Setup
+## 6. Jupyter setup
 
 We use Jupyter to showcase usage and register a dedicated kernel:
 
@@ -163,7 +170,7 @@ poetry run dvc stage add -f -n train \
   poetry run python -m wine_predictor.modeling.train
 ```
 
-## 11. Reproducing experiments and tracking metrics
+## 11. Reproducing experiments and tracking metrics with DVC
 To inspect and compare metrics:
 ```bash
 poetry run dvc metrics show
@@ -171,15 +178,147 @@ poetry run dvc metrics diff HEAD~1
 ```
 ![DVC](./figures/dvc_diff.png)
 
+## 12. MLFlow setup and integration
+We use MLFlow to track experiments for reasons outlined above.
 
-## 12. Reproducing everything
+### 12.1 Setup
+MLFlow is added as a project dependency via Poetry:
+```bash
+poetry add mlflow
+```
+For convenience, we isolate all MLFlow helpers and utils in `wine_predictor/mlflow_utils.py`
+
+### 12.2 Database and artifacts
+MLFlow is configured to run on top of a local SQLite DB and a local artifact directory:
+Tracking DB URI:
+sqlite:///mlruns/mlflow.db
+Artifact location:
+mlruns/artifacts
+
+`configure_mlflow` handles basic configuration:
+```python
+# wine_predictor/mlflow_utils.py
+
+DEFAULT_EXPERIMENT_NAME = "wine_quality_hw3"
+DEFAULT_TRACKING_URI = "sqlite:///mlruns/mlflow.db"
+
+def configure_mlflow(
+    tracking_uri: str = DEFAULT_TRACKING_URI,
+    experiment_name: str = DEFAULT_EXPERIMENT_NAME,
+) -> None:
+    mlflow.set_tracking_uri(tracking_uri)
+    mlflow.set_experiment(experiment_name)
+```
+All runs are logged under a single MLFlow experiment.
+
+### 12.3 Authentication
+Since we're running a local-only MLFlow setup and UI is bound to localhost, we don't really have any traditional authentication:
+```python
+poetry run mlflow ui \
+  --backend-store-uri sqlite:///mlruns/mlflow.db \
+  --default-artifact-root mlruns/artifacts \
+  --host 127.0.0.1 \
+  --port 5000
+```
+By default, this means the UI can only be accessed from the local machine, so access comes down to local users' rights configuration. If we really wanted to emulate some kind of access restriction, we could do
+```bash
+chmod -R go-rwx mlruns
+```
+to make it so that only the current OS user can read/write tracking data.
+
+### 12.4 Experiments
+To create a demo, we use a simple grid of experiments with params defined in `params.yaml`:
+```yaml
+model:
+  type: logreg          # logreg, random_forest, gradient_boosting possible
+  max_iter: 1000
+  C: 1.0
+  multi_class: auto
+
+  # shared
+  test_size: 0.2
+  random_state: 42
+
+  # RandomForest-only
+  n_estimators: 100
+  max_depth: null
+
+  # GradientBoosting-only
+  gb_learning_rate: 0.1
+  gb_n_estimators: 100
+```
+
+### 12.5 Code integration
+We use:
+
+- `@training_run(...)` – decorator that wraps a training function into an MLflow run
+
+- `mlflow_run(...)` – context manager for the decorator
+
+`@training_run`:
+
+- Configures MLFlow (URI + experiment name)
+
+- Starts and stops runs
+
+- Logs params, metrics, artifacts, model and tags
+
+The decorator is defined in `wine_predictor/mlflow_utils.py` and is used in `wine_predictor/modeling/train.py`. The updated training code uses the new decorators and builds a trainining pipeline with the provided params.
+
+### 12.6 Launching a single run
+To launch a single run with `params.yaml`:
+```bash
+poetry run python -m wine_predictor.modeling.train
+```
+
+### 12.7 Launching a grid of experiments
+To launch an entire grid of training runs:
+```bash
+poetry run python -m wine_predictor.experiments
+```
+All the params that define the grid can be found in `wine_predictor/experiments.py`
+
+## 13. MLFlow usage
+To run the UI:
+```bash
+poetry run mlflow ui \
+  --backend-store-uri sqlite:///mlruns/mlflow.db \
+  --default-artifact-root mlruns/artifacts \
+  --host 127.0.0.1 \
+  --port 5000
+```
+Once you've selected the experiment, you should see of all your logged runs:
+![MLFlow UI list](./figures/mlflow_list.png)
+Built-in functionality allows you to search and filter by metrics, values, time created, state. You can also sort and open additional columns with all of your tracked params.  For example, you could:
+Filter runs by tags:
+
+- `tags.hw = "3"`
+- `tags.experiment = "grid"`
+- `tags.algorithm = "random_forest"`
+
+Sort by:
+`metrics.accuracy DESC`
+
+Select several runs and click `Compare` to see:
+
+- parallel coordinate plots
+- metric vs parameter plots (e.g. accuracy vs C)
+- individual run details (artifacts, params, tags)
+
+MLFlow also makes it easy to visualise key metrics:
+![MLFlow UI visual](./figures/mlflow_vis.png)
+Clicking on a specific run will allow you to see its details and params, as well as information on run artifacts:
+![MLFLow UI single](./figures/mlflow_single.png)
+
+
+## 14. Reproducing everything
 
 
 ```bash
 # 1. Clone
 git clone https://github.com/RageAgainstTheAssembly/EPML-ITMO
 cd EPML-ITMO
-git checkout main_hw2
+git checkout main_hw3
 
 # 2. Poetry
 pip install --user poetry
@@ -192,21 +331,16 @@ poetry install
 poetry run pre-commit install
 poetry run pre-commit run --all-files
 
-# 5. Get data and model artifacts from DVC remote (this assumes you have access to the remote)
-poetry run dvc remote modify local_remote url <insert your remote path>
-poetry run dvc pull
+# 5. Run a single experiment
+poetry run python -m wine_predictor.modeling.train
 
-# 6. Reproduce the training pipeline from DVC
-poetry run dvc repro
+# 6. Run a grid of experiments
+poetry run python -m wine_predictor.experiments
 
-# 7. Compare versions
-poetry run dvc metrics show
-poetry run dvc metrics diff
-
-# 8. (Optional) Start JupyterLab
-poetry run jupyter lab
-
-# 9. (Optional) Docker
-docker build -t epml-wine:dev .
-docker run --rm epml-wine:dev
+# 7. See results in MLFlow UI
+poetry run mlflow ui \
+  --backend-store-uri sqlite:///mlruns/mlflow.db \
+  --default-artifact-root mlruns/artifacts \
+  --host 127.0.0.1 \
+  --port 5000
 ```
