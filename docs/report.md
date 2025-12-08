@@ -331,13 +331,17 @@ poetry install
 poetry run pre-commit install
 poetry run pre-commit run --all-files
 
-# 5. Run a single experiment
+# 5. Get data and model artifacts from DVC remote (this assumes you have access to the remote)
+poetry run dvc remote modify local_remote url <insert your remote path>
+poetry run dvc pull
+
+# 6. Run a single experiment
 poetry run python -m wine_predictor.modeling.train
 
-# 6. Run a grid of experiments
+# 7. Run a grid of experiments
 poetry run python -m wine_predictor.experiments
 
-# 7. See results in MLFlow UI
+# 8. See results in MLFlow UI
 poetry run mlflow ui \
   --backend-store-uri sqlite:///mlruns/mlflow.db \
   --default-artifact-root mlruns/artifacts \
