@@ -48,8 +48,8 @@ def log_model_sklearn(model: Any, artifact_path: str = "model") -> None:
 
 
 def training_run(
-    run_name: Optional[str] = None,
-    tags: Optional[Dict[str, str]] = None,
+    default_run_name: Optional[str] = None,
+    default_tags: Optional[Dict[str, str]] = None,
 ) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
     """
     Decorator for wrapping a training function into an MLflow run.
@@ -58,7 +58,19 @@ def training_run(
     def decorator(fn: Callable[..., Any]) -> Callable[..., Any]:
         def wrapper(*args: Any, **kwargs: Any) -> Any:
             configure_mlflow()
-            with mlflow_run(run_name=run_name or fn.__name__, tags=tags):
+
+            run_name_kw = kwargs.pop("run_name", None)
+            extra_tags = kwargs.pop("mlflow_tags", None)
+
+            run_name = run_name_kw or default_run_name or fn.__name__
+
+            tags: Dict[str, str] = {}
+            if isinstance(default_tags, dict):
+                tags.update(default_tags)
+            if isinstance(extra_tags, dict):
+                tags.update(extra_tags)
+
+            with mlflow_run(run_name=run_name, tags=tags):
                 result = fn(*args, **kwargs)  # type: ignore[call-arg]
 
                 if isinstance(result, dict):
@@ -78,6 +90,10 @@ def training_run(
                     model = result.get("model")
                     if model is not None:
                         log_model_sklearn(model)
+
+                    tags_from_result = result.get("tags")
+                    if isinstance(tags_from_result, dict):
+                        mlflow.set_tags(tags_from_result)
 
                 return result
 

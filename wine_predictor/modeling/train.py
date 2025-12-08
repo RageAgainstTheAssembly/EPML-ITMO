@@ -6,6 +6,7 @@ from typing import Any, Dict
 
 import joblib
 import yaml  # type: ignore[import-untyped]
+from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from sklearn.model_selection import train_test_split
@@ -26,39 +27,72 @@ def load_params(path: str | Path = "params.yaml") -> Dict[str, Any]:
         return yaml.safe_load(f) or {}
 
 
-def build_logreg_pipeline(model_params: Dict[str, Any] | None = None) -> Pipeline:
+def build_model_pipeline(model_params: Dict[str, Any] | None = None) -> Pipeline:
+    """Build a sklearn Pipeline with different algorithms based on model_params."""
     if model_params is None:
         model_params = {}
 
-    max_iter = model_params.get("max_iter", 1000)
-    C = model_params.get("C", 1.0)
-    multi_class = model_params.get("multi_class", "auto")
+    model_type = model_params.get("type", "logreg")
+
     random_state = model_params.get("random_state", TRAINING_CONFIG.random_state)
 
-    logreg = LogisticRegression(
-        max_iter=max_iter,
-        C=C,
-        multi_class=multi_class,
-        n_jobs=-1,
-        random_state=random_state,
-    )
+    if model_type == "logreg":
+        max_iter = model_params.get("max_iter", 1000)
+        C = model_params.get("C", 1.0)
+        multi_class = model_params.get("multi_class", "auto")
+
+        clf = LogisticRegression(
+            max_iter=max_iter,
+            C=C,
+            multi_class=multi_class,
+            n_jobs=-1,
+            random_state=random_state,
+        )
+    elif model_type == "random_forest":
+        n_estimators = model_params.get("n_estimators", 100)
+        max_depth = model_params.get("max_depth", None)
+
+        clf = RandomForestClassifier(
+            n_estimators=n_estimators,
+            max_depth=max_depth,
+            random_state=random_state,
+            n_jobs=-1,
+        )
+    elif model_type == "gradient_boosting":
+        gb_learning_rate = model_params.get("gb_learning_rate", 0.1)
+        gb_n_estimators = model_params.get("gb_n_estimators", 100)
+
+        clf = GradientBoostingClassifier(
+            learning_rate=gb_learning_rate,
+            n_estimators=gb_n_estimators,
+            random_state=random_state,
+        )
+    else:
+        raise ValueError(f"Unsupported model.type: {model_type}")
 
     return Pipeline(
         steps=[
             ("scaler", StandardScaler()),
-            ("logreg", logreg),
+            ("classifier", clf),
         ]
     )
 
 
-@training_run(run_name="baseline_logreg")
+@training_run(
+    default_run_name="train_wine_model",
+    default_tags={"project": "epml_itmo", "hw": "3"},
+)
 def train_baseline(
     *,
     config: TrainingConfig = TRAINING_CONFIG,
+    override_model_params: Dict[str, Any] | None = None,
 ) -> Dict[str, Any]:
-    """Train a baseline logistic regression model"""
-    params = load_params()
-    model_params: Dict[str, Any] = params.get("model", {})
+    """Train a model using the params."""
+    raw_params = load_params()
+    model_params: Dict[str, Any] = raw_params.get("model", {}) or {}
+
+    if override_model_params:
+        model_params.update(override_model_params)
 
     df = load_wine_data(config=config)
     X, y = create_features_and_target(df, config=config)
@@ -74,7 +108,7 @@ def train_baseline(
         stratify=y,
     )
 
-    model = build_logreg_pipeline(model_params=model_params)
+    model = build_model_pipeline(model_params=model_params)
     model.fit(X_train, y_train)
 
     y_pred = model.predict(X_test)
@@ -103,18 +137,22 @@ def train_baseline(
         json.dump(metrics, f, indent=2)
     print(f"Saved metrics to: {metrics_path}")
 
+    final_params: Dict[str, Any] = {
+        **model_params,
+        "test_size": test_size,
+        "random_state": random_state,
+    }
+
     return {
         "model": model,
-        "params": {
-            **model_params,
-            "test_size": test_size,
-            "random_state": random_state,
-            "model_type": "logreg",
-        },
+        "params": final_params,
         "metrics": metrics,
         "artifacts": {
             "model_path": str(model_path),
             "metrics_path": str(metrics_path),
+        },
+        "tags": {
+            "algorithm": model_params.get("type", "logreg"),
         },
     }
 
