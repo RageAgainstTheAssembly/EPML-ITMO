@@ -1,7 +1,7 @@
 
-# EPML HW 3
+# EPML HW 4
 
-This is just a brief README, you can find the full report in `docs/report.md`. Note that experiment tracking mostly concerns sections 12-13.
+This is just a brief README, you can find the full report in `docs/report.md`. Note that pipeline setup mostly concerns sections 11-12.
 
 Perfectly reproducible on my machine, hoping that's a good sign
 
@@ -14,6 +14,7 @@ Perfectly reproducible on my machine, hoping that's a good sign
 - DVC data, model, hyperparams and metrics tracking
 - DVC experiment reproducibility
 - MLFlow experiment tracking
+- Full DVC pipeline + OmegaConf configuration handling
 
 
 ## Basic Quick Start (from HW 1)

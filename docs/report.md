@@ -1,8 +1,8 @@
-# HW 3
+# HW 4
 
 ## 1. Overview
 
-The point of HW 3 is setting up MLFlow-based logging and experiment tracking for our existing project.
+The point of HW 4 is setting up a proper ML pipeline with DVC and OmegaConf for our existing project.
 Also, from previous stages we inherit:
 
 - Cookiecutter for the overall template
@@ -13,11 +13,11 @@ Also, from previous stages we inherit:
 - Docker reproducibility
 - Git usage: starting out with pushing changes to `develop` branch, testing docker on `feature/docker`, finally pushing to `main`
 - DVC-based data and model versioning
+- MLFlow experiment tracking and logging
 
 In this HW we add:
-- MLFLOW experiment tracking
-- Utils for running a grid of experiments with different models and hyperparams for comparison
-- MLFlow logging: metrics, parameters and artifacts
+- A multi stage (train->evaluate->notify) ML pipeline
+- Structured composable configuration with OmegaConf
 
 #### A few notes on the specifics:
 - We use Wine Quality prediction as an example
@@ -28,6 +28,7 @@ In this HW we add:
 - Detailed tool configs can be found in the corresponding files (mainly `pyproject.toml`)
 - Why DVC? Seemed versatile and simple enough. I like the parallels between DVC and Git.
 - Why MLFlow? I've already used W&B and TensorBoard. MLFlow was something I've been wanting to try for a while.
+- Aside from MLFlow functionality, we track DVC pipeline progress entirely in console. We also apply the same logic to completion notifications, using `wine_predictor/pipelines/notify.py` as an example. Its logic could be replaced with a call to the Telegram API for a proper message-based notification system.
 
 
 ## 2. Project structure
@@ -140,55 +141,18 @@ We use DVC for both data and model versioning, while also tracking hyperparams a
 ## 9. Data versioning
 We use a local remote to keep track of our only dataset - WineQT.csv
 
-## 10. Model versioning and hyperparams
-Model and training hyperparams are contained in params.yaml.
-Example:
-```yaml
-model:
-  max_iter: 1000
-  C: 1.0
-  multi_class: auto
-  random_state: 42
-  test_size: 0.2
-```
-The core training script `wine_predictor/modeling/train.py` loads these params, trains the model accordingly and saves the artifacts for DVC:
 
-1. models/baseline_logreg.joblib – trained model
-
-2. metrics.json – evaluation metrics
-
-We define a `train` stage in `dvc.yaml`:
-```bash
-poetry run dvc stage add -f -n train \
-  -d data/external/WineQT.csv \
-  -d wine_predictor/dataset.py \
-  -d wine_predictor/features.py \
-  -d wine_predictor/modeling/train.py \
-  -p model \
-  -o models/baseline_logreg.joblib \
-  -M metrics.json \
-  poetry run python -m wine_predictor.modeling.train
-```
-
-## 11. Reproducing experiments and tracking metrics with DVC
-To inspect and compare metrics:
-```bash
-poetry run dvc metrics show
-poetry run dvc metrics diff HEAD~1
-```
-![DVC](./figures/dvc_diff.png)
-
-## 12. MLFlow setup and integration
+## 10. MLFlow setup and integration
 We use MLFlow to track experiments for reasons outlined above.
 
-### 12.1 Setup
+### 10.1 Setup
 MLFlow is added as a project dependency via Poetry:
 ```bash
 poetry add mlflow
 ```
 For convenience, we isolate all MLFlow helpers and utils in `wine_predictor/mlflow_utils.py`
 
-### 12.2 Database and artifacts
+### 10.2 Database and artifacts
 MLFlow is configured to run on top of a local SQLite DB and a local artifact directory:
 Tracking DB URI:
 sqlite:///mlruns/mlflow.db
@@ -211,7 +175,7 @@ def configure_mlflow(
 ```
 All runs are logged under a single MLFlow experiment.
 
-### 12.3 Authentication
+### 10.3 Authentication
 Since we're running a local-only MLFlow setup and UI is bound to localhost, we don't really have any traditional authentication:
 ```python
 poetry run mlflow ui \
@@ -226,29 +190,8 @@ chmod -R go-rwx mlruns
 ```
 to make it so that only the current OS user can read/write tracking data.
 
-### 12.4 Experiments
-To create a demo, we use a simple grid of experiments with params defined in `params.yaml`:
-```yaml
-model:
-  type: logreg          # logreg, random_forest, gradient_boosting possible
-  max_iter: 1000
-  C: 1.0
-  multi_class: auto
 
-  # shared
-  test_size: 0.2
-  random_state: 42
-
-  # RandomForest-only
-  n_estimators: 100
-  max_depth: null
-
-  # GradientBoosting-only
-  gb_learning_rate: 0.1
-  gb_n_estimators: 100
-```
-
-### 12.5 Code integration
+### 10.4 Code integration
 We use:
 
 - `@training_run(...)` – decorator that wraps a training function into an MLflow run
@@ -265,20 +208,20 @@ We use:
 
 The decorator is defined in `wine_predictor/mlflow_utils.py` and is used in `wine_predictor/modeling/train.py`. The updated training code uses the new decorators and builds a trainining pipeline with the provided params.
 
-### 12.6 Launching a single run
+### 10.5 Launching a single run
 To launch a single run with `params.yaml`:
 ```bash
 poetry run python -m wine_predictor.modeling.train
 ```
 
-### 12.7 Launching a grid of experiments
+### 10.6 Launching a grid of experiments
 To launch an entire grid of training runs:
 ```bash
 poetry run python -m wine_predictor.experiments
 ```
 All the params that define the grid can be found in `wine_predictor/experiments.py`
 
-## 13. MLFlow usage
+## 11. MLFlow usage
 To run the UI:
 ```bash
 poetry run mlflow ui \
@@ -311,7 +254,105 @@ Clicking on a specific run will allow you to see its details and params, as well
 ![MLFLow UI single](./figures/mlflow_single.png)
 
 
-## 14. Reproducing everything
+
+## 12. DVC ML pipeline and OmegaConf configuration
+
+### 12.1 Why DVC?
+- Fairly lightweight and simple
+- Already integrated for data versioning in previous stages of this project
+- Supports all the essential features like stages, dependency tracking, caching, parallel execution
+
+### 12.2 DVC pipeline setup
+
+In practice, we implement the pipeline by changing `dvc.yaml` from a single `train` stage to `train`->`evaluate`->`notify`:
+```yaml
+stages:
+  train:
+    cmd: poetry run python -m wine_predictor.modeling.train --model logreg
+    deps:
+      - data/external/WineQT.csv
+      - wine_predictor/dataset.py
+      - wine_predictor/features.py
+      - wine_predictor/modeling/train.py
+      - wine_predictor/config.py
+      - configs/train/base.yaml
+      - configs/model/logreg.yaml
+    outs:
+      - models/baseline_model.joblib
+    metrics:
+      - metrics.json:
+          cache: false
+
+  evaluate:
+    cmd: poetry run python -m wine_predictor.pipelines.evaluate
+    deps:
+      - models/baseline_model.joblib
+      - wine_predictor/pipelines/evaluate.py
+      - wine_predictor/dataset.py
+      - wine_predictor/features.py
+      - wine_predictor/config.py
+    metrics:
+      - reports/metrics_detailed.json:
+          cache: false
+
+  notify:
+    cmd: poetry run python -m wine_predictor.pipelines.notify
+    deps:
+      - reports/metrics_detailed.json
+      - wine_predictor/pipelines/notify.py
+    always_changed: true
+```
+We set `always_changed: true` for `notify` stage to make sure it actually runs every time, even when we're reproducing existing results.
+
+This configuration results in a fairly simple DAG:
+![DVC DAG](./figures/dvc_dag.png)
+
+### 12.3 DVC pipeline usage
+In order to run the pipeline with all its stages, run
+```bash
+poetry run dvc repro
+```
+This will run `train`, `evaluate` and `notify` sequentially. Initiating another run without changes will lead to the following behaviour:
+![DVC Cache](./figures/dvc_cache.png)
+Caching will ensure unchanged stages (`train`, `evaluate`) do not run again. Instead, only the pipeline completion notification stage `notify` will run to show results.
+
+DVC also supports running multiple jobs in parallel
+```bash
+poetry run dvc repro -j 2
+```
+although our pipeline is not suited to parallel execution, as it lacks independent stages.
+
+The console output of the various stages is used in conjunction with the `notify` stage to keep track of execution, errors and results.
+
+### 12.4 Why OmegaConf?
+- Easy to use with YAML files
+- Supports the necessary features
+- Pretty lightweight and easy to add to our existing code
+
+### 12.5 OmegaConf usage
+- Loading base training configuration from `configs/train/base.yaml`
+- Loading algorithm-specific configurations from `configs/model/*.yaml`
+- Providing these configs to the training code in a composable way
+
+Configs are stored in a dedicated `configs/` directory:
+```text
+configs/
+├── train
+│   └── base.yaml
+└── model
+    ├── logreg.yaml
+    ├── random_forest.yaml
+    └── gradient_boosting.yaml
+
+```
+`wine_predictor/config.py` integrates OmegaConf and performs extra validation.
+
+We also add some validation on top to make sure configs are checked for broken values.
+
+Overall, we're using the following hierarchy: base -> model-type -> per-run overrides.
+
+
+## 13. Reproducing everything
 
 
 ```bash
@@ -335,13 +376,10 @@ poetry run pre-commit run --all-files
 poetry run dvc remote modify local_remote url <insert your remote path>
 poetry run dvc pull
 
-# 6. Run a single experiment
-poetry run python -m wine_predictor.modeling.train
+# 6. Run the pipeline
+poetry run dvc repro
 
-# 7. Run a grid of experiments
-poetry run python -m wine_predictor.experiments
-
-# 8. See results in MLFlow UI
+# 7. See results in MLFlow UI
 poetry run mlflow ui \
   --backend-store-uri sqlite:///mlruns/mlflow.db \
   --default-artifact-root mlruns/artifacts \

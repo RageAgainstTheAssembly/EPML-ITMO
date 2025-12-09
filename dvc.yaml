@@ -32,3 +32,4 @@ stages:
     deps:
       - reports/metrics_detailed.json
       - wine_predictor/pipelines/notify.py
+    always_changed: true
