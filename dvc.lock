@@ -17,8 +17,8 @@ stages:
       size: 78057
     - path: wine_predictor/config.py
       hash: md5
-      md5: 6b485c99a7117c7464171027e93007d6
-      size: 2403
+      md5: f8e0bb0b866b416f779452f2e265a045
+      size: 4215
     - path: wine_predictor/dataset.py
       hash: md5
       md5: 408c6e356f55a9af4d8be26e6a8f1be7
@@ -49,8 +49,8 @@ stages:
       size: 2617
     - path: wine_predictor/config.py
       hash: md5
-      md5: 6b485c99a7117c7464171027e93007d6
-      size: 2403
+      md5: f8e0bb0b866b416f779452f2e265a045
+      size: 4215
     - path: wine_predictor/dataset.py
       hash: md5
       md5: 408c6e356f55a9af4d8be26e6a8f1be7
@@ -61,8 +61,8 @@ stages:
       size: 418
     - path: wine_predictor/pipelines/evaluate.py
       hash: md5
-      md5: 8f4264ef7645eb3769f1228dd56af8d5
-      size: 1697
+      md5: 9df694f16197426e6ef7f164c5162dd7
+      size: 1721
     outs:
     - path: reports/metrics_detailed.json
       hash: md5
@@ -77,5 +77,5 @@ stages:
       size: 1628
     - path: wine_predictor/pipelines/notify.py
       hash: md5
-      md5: 802d0ffbbfcf32cb5aaba79feb0a466f
-      size: 962
+      md5: cd1ab3f55486a168675f50f4164bd2fe
+      size: 946

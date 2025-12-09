@@ -6,6 +6,8 @@ from typing import Any, Dict, List
 
 from omegaconf import OmegaConf
 
+SUPPORTED_MODEL_TYPES = {"logreg", "random_forest", "gradient_boosting"}
+
 
 @dataclass(frozen=True)
 class ProjectPaths:
@@ -67,6 +69,18 @@ def load_training_config() -> TrainingConfig:
     test_size = float(train_cfg.get("test_size", base.test_size))
     random_state = int(train_cfg.get("random_state", base.random_state))
 
+    if not 0.0 < test_size < 1.0:
+        raise ValueError(
+            f"Invalid train.test_size={test_size!r}. "
+            "Expected a float in the (0, 1) range."
+        )
+
+    if random_state < 0:
+        raise ValueError(
+            f"Invalid train.random_state={random_state!r}. "
+            "Expected a non-negative integer."
+        )
+
     return TrainingConfig(
         paths=base.paths,
         feature_cols=base.feature_cols,
@@ -85,7 +99,44 @@ def load_model_config(model_name: str) -> Dict[str, Any]:
         raise ValueError(f"Model config not found for: {model_name} at {cfg_path}")
 
     cfg = OmegaConf.load(cfg_path)
-    return OmegaConf.to_container(cfg, resolve=True)  # type: ignore[no-any-return]
+    container = OmegaConf.to_container(cfg, resolve=True)  # type: ignore[no-any-return]
+
+    if "model" not in container or not isinstance(container["model"], dict):
+        raise ValueError(f"Config {cfg_path} must contain a top-level 'model' mapping.")
+
+    model_cfg: Dict[str, Any] = container["model"]  # type: ignore[assignment]
+
+    model_type = model_cfg.get("type")
+    if model_type not in SUPPORTED_MODEL_TYPES:
+        raise ValueError(
+            f"Invalid or missing model.type={model_type!r} in {cfg_path}. "
+            f"Expected one of: {sorted(SUPPORTED_MODEL_TYPES)}."
+        )
+
+    if model_type == "logreg":
+        C = float(model_cfg.get("C", 1.0))
+        if C <= 0:
+            raise ValueError(
+                f"Invalid C={C!r} for logreg in {cfg_path}. Expected C > 0."
+            )
+
+    if model_type == "random_forest":
+        n_estimators = int(model_cfg.get("n_estimators", 100))
+        if n_estimators <= 0:
+            raise ValueError(
+                f"Invalid n_estimators={n_estimators!r} for random_forest in {cfg_path}. "
+                "Expected n_estimators > 0."
+            )
+
+    if model_type == "gradient_boosting":
+        gb_lr = float(model_cfg.get("gb_learning_rate", 0.1))
+        if gb_lr <= 0:
+            raise ValueError(
+                f"Invalid gb_learning_rate={gb_lr!r} for gradient_boosting in {cfg_path}. "
+                "Expected gb_learning_rate > 0."
+            )
+
+    return {"model": model_cfg}
 
 
 TRAINING_CONFIG = load_training_config()
