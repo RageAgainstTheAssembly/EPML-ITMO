@@ -13,10 +13,13 @@ def build_experiment_grid() -> List[Dict[str, Any]]:
         for test_size in [0.2, 0.3]:
             experiments.append(
                 {
-                    "type": "logreg",
-                    "C": C,
-                    "max_iter": 1000,
-                    "test_size": test_size,
+                    "model_name": "logreg",
+                    "override_params": {
+                        "type": "logreg",
+                        "C": C,
+                        "max_iter": 1000,
+                        "test_size": test_size,
+                    },
                 }
             )
 
@@ -24,18 +27,24 @@ def build_experiment_grid() -> List[Dict[str, Any]]:
         for max_depth in [None, 5]:
             experiments.append(
                 {
-                    "type": "random_forest",
-                    "n_estimators": n_estimators,
-                    "max_depth": max_depth,
+                    "model_name": "random_forest",
+                    "override_params": {
+                        "type": "random_forest",
+                        "n_estimators": n_estimators,
+                        "max_depth": max_depth,
+                    },
                 }
             )
 
     for lr in [0.05, 0.1, 0.2]:
         experiments.append(
             {
-                "type": "gradient_boosting",
-                "gb_learning_rate": lr,
-                "gb_n_estimators": 100,
+                "model_name": "gradient_boosting",
+                "override_params": {
+                    "type": "gradient_boosting",
+                    "gb_learning_rate": lr,
+                    "gb_n_estimators": 100,
+                },
             }
         )
 
@@ -46,20 +55,28 @@ def run_experiment_grid() -> None:
     grid = build_experiment_grid()
     total = len(grid)
 
-    for idx, model_params in enumerate(grid, start=1):
-        algo = model_params.get("type", "unknown")
+    for idx, exp in enumerate(grid, start=1):
+        model_name: str = exp["model_name"]
+        override_params: Dict[str, Any] = exp["override_params"]
+
+        algo = override_params.get("type", model_name)
         run_name = f"{algo}_run_{idx:02d}"
 
         tags = {
             "algorithm": algo,
-            "hw": "3",
+            "hw": "4",
             "experiment": "grid",
         }
 
-        print(f"\n=== Running experiment {idx}/{total}: {run_name} ===")
+        print(
+            f"\n=== Running experiment {idx}/{total}: {run_name} "
+            f"(model={model_name}) ==="
+        )
+
         train_baseline(
             config=TRAINING_CONFIG,
-            override_model_params=model_params,
+            model_name=model_name,
+            override_model_params=override_params,
             run_name=run_name,
             mlflow_tags=tags,
         )

@@ -5,7 +5,7 @@ from typing import Any, Callable, Dict, Optional
 
 import mlflow
 
-DEFAULT_EXPERIMENT_NAME = "wine_quality_hw3"
+DEFAULT_EXPERIMENT_NAME = "wine_quality_hw4"
 DEFAULT_TRACKING_URI = "sqlite:///mlruns/mlflow.db"
 DEFAULT_ARTIFACT_LOCATION = "mlruns/artifacts"
 

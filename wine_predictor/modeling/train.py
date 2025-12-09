@@ -1,11 +1,11 @@
 from __future__ import annotations
 
+import argparse
 import json
 from pathlib import Path
 from typing import Any, Dict
 
 import joblib
-import yaml  # type: ignore[import-untyped]
 from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
@@ -13,18 +13,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from ..config import TRAINING_CONFIG, TrainingConfig
+from ..config import TRAINING_CONFIG, TrainingConfig, load_model_config
 from ..dataset import load_wine_data
 from ..features import create_features_and_target
 from ..mlflow_utils import training_run
-
-
-def load_params(path: str | Path = "params.yaml") -> Dict[str, Any]:
-    param_path = Path(path)
-    if not param_path.exists():
-        return {}
-    with param_path.open("r", encoding="utf-8") as f:
-        return yaml.safe_load(f) or {}
 
 
 def build_model_pipeline(model_params: Dict[str, Any] | None = None) -> Pipeline:
@@ -33,7 +25,6 @@ def build_model_pipeline(model_params: Dict[str, Any] | None = None) -> Pipeline
         model_params = {}
 
     model_type = model_params.get("type", "logreg")
-
     random_state = model_params.get("random_state", TRAINING_CONFIG.random_state)
 
     if model_type == "logreg":
@@ -48,6 +39,7 @@ def build_model_pipeline(model_params: Dict[str, Any] | None = None) -> Pipeline
             n_jobs=-1,
             random_state=random_state,
         )
+
     elif model_type == "random_forest":
         n_estimators = model_params.get("n_estimators", 100)
         max_depth = model_params.get("max_depth", None)
@@ -58,6 +50,7 @@ def build_model_pipeline(model_params: Dict[str, Any] | None = None) -> Pipeline
             random_state=random_state,
             n_jobs=-1,
         )
+
     elif model_type == "gradient_boosting":
         gb_learning_rate = model_params.get("gb_learning_rate", 0.1)
         gb_n_estimators = model_params.get("gb_n_estimators", 100)
@@ -67,6 +60,7 @@ def build_model_pipeline(model_params: Dict[str, Any] | None = None) -> Pipeline
             n_estimators=gb_n_estimators,
             random_state=random_state,
         )
+
     else:
         raise ValueError(f"Unsupported model.type: {model_type}")
 
@@ -80,16 +74,20 @@ def build_model_pipeline(model_params: Dict[str, Any] | None = None) -> Pipeline
 
 @training_run(
     default_run_name="train_wine_model",
-    default_tags={"project": "epml_itmo", "hw": "3"},
+    default_tags={"project": "epml_itmo", "hw": "4"},
 )
 def train_baseline(
     *,
     config: TrainingConfig = TRAINING_CONFIG,
+    model_name: str = "logreg",
     override_model_params: Dict[str, Any] | None = None,
 ) -> Dict[str, Any]:
-    """Train a model using the params."""
-    raw_params = load_params()
-    model_params: Dict[str, Any] = raw_params.get("model", {}) or {}
+    """
+    Train a model using configs from OmegaConf + optional overrides.
+    """
+    model_cfg = load_model_config(model_name)
+    base_model_params: Dict[str, Any] = model_cfg.get("model", {}) or {}
+    model_params: Dict[str, Any] = base_model_params.copy()
 
     if override_model_params:
         model_params.update(override_model_params)
@@ -124,7 +122,7 @@ def train_baseline(
 
     models_dir = Path("models")
     models_dir.mkdir(parents=True, exist_ok=True)
-    model_path = models_dir / "baseline_logreg.joblib"
+    model_path = models_dir / "baseline_model.joblib"
     joblib.dump(model, model_path)
     print(f"\nSaved model to: {model_path}")
 
@@ -152,10 +150,24 @@ def train_baseline(
             "metrics_path": str(metrics_path),
         },
         "tags": {
-            "algorithm": model_params.get("type", "logreg"),
+            "algorithm": model_params.get("type", model_name),
+            "model_name": model_name,
         },
     }
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--model",
+        type=str,
+        default="logreg",
+        choices=["logreg", "random_forest", "gradient_boosting"],
+        help="Which model config to use (configs/model/<name>.yaml)",
+    )
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
-    train_baseline()
+    args = parse_args()
+    train_baseline(config=TRAINING_CONFIG, model_name=args.model)

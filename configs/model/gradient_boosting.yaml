@@ -1,0 +1,4 @@
+model:
+  type: gradient_boosting
+  gb_learning_rate: 0.1
+  gb_n_estimators: 100
