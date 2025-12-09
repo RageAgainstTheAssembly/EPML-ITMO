@@ -1,7 +1,7 @@
 
 # EPML HW 4
 
-This is just a brief README, you can find the full report in `docs/report.md`. Note that pipeline setup mostly concerns sections 11-12.
+This is just a brief README, you can find the full report in `docs/report.md`. Note that pipeline setup mostly concerns section 12.
 
 Perfectly reproducible on my machine, hoping that's a good sign
 
