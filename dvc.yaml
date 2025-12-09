@@ -1,15 +1,34 @@
 stages:
   train:
-    cmd: poetry run python -m wine_predictor.modeling.train
+    cmd: poetry run python -m wine_predictor.modeling.train --model logreg
     deps:
-    - data/external/WineQT.csv
-    - wine_predictor/dataset.py
-    - wine_predictor/features.py
-    - wine_predictor/modeling/train.py
+      - data/external/WineQT.csv
+      - wine_predictor/dataset.py
+      - wine_predictor/features.py
+      - wine_predictor/modeling/train.py
+      - wine_predictor/config.py
+      - configs/train/base.yaml
+      - configs/model/logreg.yaml
     outs:
-    - models/baseline_logreg.joblib
+      - models/baseline_model.joblib
     metrics:
-    - metrics.json:
-        cache: false
-    params:
-    - model
+      - metrics.json:
+          cache: false
+
+  evaluate:
+    cmd: poetry run python -m wine_predictor.pipelines.evaluate
+    deps:
+      - models/baseline_model.joblib
+      - wine_predictor/pipelines/evaluate.py
+      - wine_predictor/dataset.py
+      - wine_predictor/features.py
+      - wine_predictor/config.py
+    metrics:
+      - reports/metrics_detailed.json:
+          cache: false
+
+  notify:
+    cmd: poetry run python -m wine_predictor.pipelines.notify
+    deps:
+      - reports/metrics_detailed.json
+      - wine_predictor/pipelines/notify.py
