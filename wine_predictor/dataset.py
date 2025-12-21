@@ -14,7 +14,7 @@ def load_wine_data(config: TrainingConfig = TRAINING_CONFIG) -> pd.DataFrame:
     if not csv_path.exists():
         raise FileNotFoundError(
             f"WineQT.csv not found at {csv_path}. "
-            "Make sure the file is placed in data/raw/WineQT.csv"
+            "Make sure the file is placed in data/external/WineQT.csv"
         )
 
     df = pd.read_csv(csv_path)

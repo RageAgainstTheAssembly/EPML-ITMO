@@ -1,4 +1,4 @@
-from __future__ import annotations
+# from __future__ import annotations
 
 import argparse
 import json
@@ -13,6 +13,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
+from ..clearml_utils import clearml_run
 from ..config import TRAINING_CONFIG, TrainingConfig, load_model_config
 from ..dataset import load_wine_data
 from ..features import create_features_and_target
@@ -20,7 +21,6 @@ from ..mlflow_utils import training_run
 
 
 def build_model_pipeline(model_params: Dict[str, Any] | None = None) -> Pipeline:
-    """Build a sklearn Pipeline with different algorithms based on model_params."""
     if model_params is None:
         model_params = {}
 
@@ -28,39 +28,26 @@ def build_model_pipeline(model_params: Dict[str, Any] | None = None) -> Pipeline
     random_state = model_params.get("random_state", TRAINING_CONFIG.random_state)
 
     if model_type == "logreg":
-        max_iter = model_params.get("max_iter", 1000)
-        C = model_params.get("C", 1.0)
-        multi_class = model_params.get("multi_class", "auto")
-
         clf = LogisticRegression(
-            max_iter=max_iter,
-            C=C,
-            multi_class=multi_class,
+            max_iter=model_params.get("max_iter", 1000),
+            C=model_params.get("C", 1.0),
+            multi_class=model_params.get("multi_class", "auto"),
             n_jobs=-1,
             random_state=random_state,
         )
-
     elif model_type == "random_forest":
-        n_estimators = model_params.get("n_estimators", 100)
-        max_depth = model_params.get("max_depth", None)
-
         clf = RandomForestClassifier(
-            n_estimators=n_estimators,
-            max_depth=max_depth,
+            n_estimators=model_params.get("n_estimators", 100),
+            max_depth=model_params.get("max_depth", None),
             random_state=random_state,
             n_jobs=-1,
         )
-
     elif model_type == "gradient_boosting":
-        gb_learning_rate = model_params.get("gb_learning_rate", 0.1)
-        gb_n_estimators = model_params.get("gb_n_estimators", 100)
-
         clf = GradientBoostingClassifier(
-            learning_rate=gb_learning_rate,
-            n_estimators=gb_n_estimators,
+            learning_rate=model_params.get("gb_learning_rate", 0.1),
+            n_estimators=model_params.get("gb_n_estimators", 100),
             random_state=random_state,
         )
-
     else:
         raise ValueError(f"Unsupported model.type: {model_type}")
 
@@ -72,9 +59,15 @@ def build_model_pipeline(model_params: Dict[str, Any] | None = None) -> Pipeline
     )
 
 
+@clearml_run(
+    default_task_name="train_wine_model",
+    task_type=__import__("clearml").Task.TaskTypes.training,
+    default_tags={"stage": "train"},
+    register_model_name="wine_predictor_baseline",
+)
 @training_run(
     default_run_name="train_wine_model",
-    default_tags={"project": "epml_itmo", "hw": "4"},
+    default_tags={"project": "epml_itmo", "hw": "4", "stage": "train"},
 )
 def train_baseline(
     *,
@@ -82,9 +75,6 @@ def train_baseline(
     model_name: str = "logreg",
     override_model_params: Dict[str, Any] | None = None,
 ) -> Dict[str, Any]:
-    """
-    Train a model using configs from OmegaConf + optional overrides.
-    """
     model_cfg = load_model_config(model_name)
     base_model_params: Dict[str, Any] = model_cfg.get("model", {}) or {}
     model_params: Dict[str, Any] = base_model_params.copy()
@@ -110,13 +100,11 @@ def train_baseline(
     model.fit(X_train, y_train)
 
     y_pred = model.predict(X_test)
-
     acc = accuracy_score(y_test, y_pred)
-    print(f"Test accuracy: {acc:.3f}\n")
 
+    print(f"Test accuracy: {acc:.3f}\n")
     print("Classification report:")
     print(classification_report(y_test, y_pred))
-
     print("Confusion matrix:")
     print(confusion_matrix(y_test, y_pred))
 
@@ -126,10 +114,7 @@ def train_baseline(
     joblib.dump(model, model_path)
     print(f"\nSaved model to: {model_path}")
 
-    metrics = {
-        "accuracy": float(acc),
-    }
-
+    metrics = {"accuracy": float(acc)}
     metrics_path = Path("metrics.json")
     with metrics_path.open("w", encoding="utf-8") as f:
         json.dump(metrics, f, indent=2)
@@ -150,6 +135,7 @@ def train_baseline(
             "metrics_path": str(metrics_path),
         },
         "tags": {
+            "stage": "train",
             "algorithm": model_params.get("type", model_name),
             "model_name": model_name,
         },
@@ -165,9 +151,18 @@ def parse_args() -> argparse.Namespace:
         choices=["logreg", "random_forest", "gradient_boosting"],
         help="Which model config to use (configs/model/<name>.yaml)",
     )
+    parser.add_argument(
+        "--no-clearml",
+        action="store_true",
+        help="Disable ClearML logging for this run.",
+    )
     return parser.parse_args()
 
 
 if __name__ == "__main__":
     args = parse_args()
-    train_baseline(config=TRAINING_CONFIG, model_name=args.model)
+    train_baseline(
+        config=TRAINING_CONFIG,
+        model_name=args.model,
+        enable_clearml=not args.no_clearml,
+    )
