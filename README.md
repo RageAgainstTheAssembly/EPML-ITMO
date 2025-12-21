@@ -1,7 +1,7 @@
 
 # EPML HW 5
 
-This is just a brief README, you can find the full report in `docs/report.md`. Note that ClearML mostly concerns sections 13-14.
+This is just a brief README, you can find the full report in `docs/report.md`. Note that ClearML mostly concerns sections 13-15.
 
 Perfectly reproducible on my machine, hoping that's a good sign
 
