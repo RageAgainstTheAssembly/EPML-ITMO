@@ -1,0 +1,1967 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../reference/SUMMARY/">
+      
+      
+        <link rel="next" href="../reproducibility/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>HW5 Report - EPML ITMO — Wine Predictor</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#hw-6" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="EPML ITMO — Wine Predictor" class="md-header__button md-logo" aria-label="EPML ITMO — Wine Predictor" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            EPML ITMO — Wine Predictor
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              HW5 Report
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/RageAgainstTheAssembly/EPML-ITMO" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    RageAgainstTheAssembly/EPML-ITMO
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../deployment/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Deployment
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../usage/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Usage
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../experiments/" class="md-tabs__link">
+          
+  
+  
+  Experiments
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../api/" class="md-tabs__link">
+          
+  
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  HW5 Report
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../reproducibility/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Reproducibility
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="EPML ITMO — Wine Predictor" class="md-nav__button md-logo" aria-label="EPML ITMO — Wine Predictor" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    EPML ITMO — Wine Predictor
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/RageAgainstTheAssembly/EPML-ITMO" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    RageAgainstTheAssembly/EPML-ITMO
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Experiments
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Experiments
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../experiments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../experiments/experiments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Comparison Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/SUMMARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HW5 Report
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HW5 Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-few-notes-on-the-specifics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A few notes on the specifics:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-project-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Project structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-dependency-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Dependency management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Dependency management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-poetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Poetry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-pyprojecttoml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 pyproject.toml
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-formatters-linters-pre-commit-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Formatters, linters, pre-commit hooks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-actual-ml-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Actual ML solution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Actual ML solution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-running-from-a-notebook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Running from a notebook
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-jupyter-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Jupyter setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Docker
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-versioning-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Versioning tools
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-data-versioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Data versioning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-mlflow-setup-and-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. MLFlow setup and integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. MLFlow setup and integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102-database-and-artifacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 Database and artifacts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#104-code-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 Code integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#105-launching-a-single-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.5 Launching a single run
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#106-launching-a-grid-of-experiments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.6 Launching a grid of experiments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-mlflow-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. MLFlow usage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-dvc-ml-pipeline-and-omegaconf-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. DVC ML pipeline and OmegaConf configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. DVC ML pipeline and OmegaConf configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#121-why-dvc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.1 Why DVC?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#122-dvc-pipeline-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.2 DVC pipeline setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#123-dvc-pipeline-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.3 DVC pipeline usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#124-why-omegaconf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.4 Why OmegaConf?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#125-omegaconf-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.5 OmegaConf usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-clearml-server-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. ClearML Server setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13. ClearML Server setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#131-local-server-via-docker-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.1 Local server via docker-compose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#132-clearml-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.2 ClearML components
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#133-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.3 Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-clearml-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. ClearML integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14. ClearML integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#141-code-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.1 Code integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#142-clearml-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.2 ClearML tracking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#144-clearml-model-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.4 ClearML model registry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#143-comparing-experiments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.3 Comparing experiments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#151-clearml-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.1 ClearML pipeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-mkdocs-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16. MKDocs setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-api-reference-geneartion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17. API reference geneartion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#18-experiment-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18. Experiment report
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#19-github-pages-publication-via-github-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19. Github Pages publication via Github Actions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#20-reproducing-everything" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        20. Reproducing everything
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reproducibility/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reproducibility
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="hw-6">HW 6</h1>
+<h2 id="1-overview">1. Overview</h2>
+<p>The point of HW 6 is setting up MKDocs and Github Action+Pages automation for our existing project.
+Also, from previous stages we inherit:</p>
+<ul>
+<li>Cookiecutter for the overall template</li>
+<li>Poetry for dependencies, convenient setup with pyproject</li>
+<li>Pre-commit hooks and linting (Black, isort, Ruff, MyPy, Bandit)</li>
+<li><code>wine_predictor</code> as a package</li>
+<li>Jupyter notebook solution using that package</li>
+<li>Docker reproducibility</li>
+<li>Git usage: starting out with pushing changes to <code>develop</code> branch, testing docker on <code>feature/docker</code>, finally pushing to <code>main</code></li>
+<li>DVC-based data and model versioning</li>
+<li>MLFlow experiment tracking and logging</li>
+<li>A multi stage (train-&gt;evaluate-&gt;notify) ML pipeline</li>
+<li>Structured composable configuration with OmegaConf</li>
+<li>ClearML tracking, model registry, pipeline</li>
+</ul>
+<p>In this HW we add:
+- MKDocs
+- Github Actions+Pages integration</p>
+<h4 id="a-few-notes-on-the-specifics">A few notes on the specifics:</h4>
+<ul>
+<li>We use Wine Quality prediction as an example</li>
+<li>The actual ML pipeline is just a baseline solution, for now we don't really care about metrics</li>
+<li>Running the Docker container means running the training and printing the metrics by default</li>
+<li>A few folders from the template (e.g. <code>data/processed</code>) were kept even though they are not currently used in case we need them in the future</li>
+<li>We don't actually make and plots or figures, but keep those folders for the reason mentioned above</li>
+<li>Detailed tool configs can be found in the corresponding files (mainly <code>pyproject.toml</code>)</li>
+<li>Why DVC? Seemed versatile and simple enough. I like the parallels between DVC and Git.</li>
+<li>Why MLFlow? I've already used W&amp;B and TensorBoard. MLFlow was something I've been wanting to try for a while.</li>
+<li>Aside from MLFlow functionality, we track DVC pipeline progress entirely in console. We also apply the same logic to completion notifications, using <code>wine_predictor/pipelines/notify.py</code> as an example. Its logic could be replaced with a call to the Telegram API for a proper message-based notification system.</li>
+</ul>
+<h2 id="2-project-structure">2. Project structure</h2>
+<p><img alt="Tree" src="../figures/tree.png" /></p>
+<h2 id="3-dependency-management">3. Dependency management</h2>
+<h3 id="31-poetry">3.1 Poetry</h3>
+<p>Poetry is used as the dependency manager</p>
+<p>This is a barebones example of using poetry to install our dependencies:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>poetry
+
+poetry<span class="w"> </span>config<span class="w"> </span>virtualenvs.in-project<span class="w"> </span><span class="nb">true</span>
+
+poetry<span class="w"> </span>install
+</code></pre></div>
+<p>This creates <code>.venv/</code> inside the project and installs everything from <code>pyproject.toml</code> / <code>poetry.lock</code>.</p>
+<h3 id="32-pyprojecttoml">3.2 pyproject.toml</h3>
+<p>It contains:
+* Project metadata
+* Python dependencies
+* Dev dependencies (linters, pre-commit hooks, jupyter)
+* Tool configuration</p>
+<p>Installing from scratch:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/RageAgainstTheAssembly/EPML-ITMO
+<span class="nb">cd</span><span class="w"> </span>EPML_ITMO
+poetry<span class="w"> </span>install
+</code></pre></div>
+<hr />
+<h2 id="4-formatters-linters-pre-commit-hooks">4. Formatters, linters, pre-commit hooks</h2>
+<ul>
+<li>Black – code formatter</li>
+<li>isort – import sorter</li>
+<li>Ruff – fast linter + auto-fixes</li>
+<li>MyPy – static type checker</li>
+<li>Bandit – security scanner</li>
+</ul>
+<p>Installing and running hooks:</p>
+<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>pre-commit<span class="w"> </span>install
+
+poetry<span class="w"> </span>run<span class="w"> </span>pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
+</code></pre></div>
+<p><img alt="Hooks" src="../figures/hooks.png" /></p>
+<h2 id="5-actual-ml-solution">5. Actual ML solution</h2>
+<h3 id="51-implementation">5.1 Implementation</h3>
+<p>Won't be going into detail - it's essentially a basic SKLearn pipeline with a Logistic Regression classifier. Training a great ML model is not the point of this homework</p>
+<h3 id="53-running-from-a-notebook">5.3 Running from a notebook</h3>
+<p>Solution in <code>notebooks/solution.ipynb</code> uses the package code to run training and inference.</p>
+<h2 id="6-jupyter-setup">6. Jupyter setup</h2>
+<p>We use Jupyter to showcase usage and register a dedicated kernel:</p>
+<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>add<span class="w"> </span>--group<span class="w"> </span>dev<span class="w"> </span>jupyterlab<span class="w"> </span>ipykernel
+
+poetry<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>ipykernel<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>--name<span class="w"> </span>epml-wine<span class="w"> </span>--display-name<span class="w"> </span><span class="s2">&quot;Python (epml_itmo)&quot;</span>
+
+poetry<span class="w"> </span>run<span class="w"> </span>jupyter<span class="w"> </span>lab
+</code></pre></div>
+<h2 id="7-docker">7. Docker</h2>
+<p>We provide a simple <code>Dockerfile</code> in the project root</p>
+<p>To build and run:</p>
+<p><div class="highlight"><pre><span></span><code>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>epml-wine:dev<span class="w"> </span>.
+
+docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>epml-wine:dev
+</code></pre></div>
+This should train the model and print its metrics to console.
+Note that the docker image works as a demo, we didn't change it to use DVC itself.</p>
+<p><img alt="Build" src="../figures/docker_build.png" />
+<img alt="Build" src="../figures/docker_run.png" /></p>
+<h2 id="8-versioning-tools">8. Versioning tools</h2>
+<p>DVC was chosen because it's very versatile and also more distinct than Git LFS, which I already have some experience with.
+We use DVC for both data and model versioning, while also tracking hyperparams and metrics.</p>
+<h2 id="9-data-versioning">9. Data versioning</h2>
+<p>We use a local remote to keep track of our only dataset - WineQT.csv</p>
+<h2 id="10-mlflow-setup-and-integration">10. MLFlow setup and integration</h2>
+<p>We use MLFlow to track experiments for reasons outlined above.</p>
+<h3 id="101-setup">10.1 Setup</h3>
+<p>MLFlow is added as a project dependency via Poetry:
+<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>add<span class="w"> </span>mlflow
+</code></pre></div>
+For convenience, we isolate all MLFlow helpers and utils in <code>wine_predictor/mlflow_utils.py</code></p>
+<h3 id="102-database-and-artifacts">10.2 Database and artifacts</h3>
+<p>MLFlow is configured to run on top of a local SQLite DB and a local artifact directory:
+Tracking DB URI:
+sqlite:///mlruns/mlflow.db
+Artifact location:
+mlruns/artifacts</p>
+<p><code>configure_mlflow</code> handles basic configuration:
+<div class="highlight"><pre><span></span><code><span class="c1"># wine_predictor/mlflow_utils.py</span>
+
+<span class="n">DEFAULT_EXPERIMENT_NAME</span> <span class="o">=</span> <span class="s2">&quot;wine_quality_hw3&quot;</span>
+<span class="n">DEFAULT_TRACKING_URI</span> <span class="o">=</span> <span class="s2">&quot;sqlite:///mlruns/mlflow.db&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">configure_mlflow</span><span class="p">(</span>
+    <span class="n">tracking_uri</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_TRACKING_URI</span><span class="p">,</span>
+    <span class="n">experiment_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_EXPERIMENT_NAME</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">set_tracking_uri</span><span class="p">(</span><span class="n">tracking_uri</span><span class="p">)</span>
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">set_experiment</span><span class="p">(</span><span class="n">experiment_name</span><span class="p">)</span>
+</code></pre></div>
+All runs are logged under a single MLFlow experiment.</p>
+<h3 id="103-authentication">10.3 Authentication</h3>
+<p>Since we're running a local-only MLFlow setup and UI is bound to localhost, we don't really have any traditional authentication:
+<div class="highlight"><pre><span></span><code><span class="n">poetry</span> <span class="n">run</span> <span class="n">mlflow</span> <span class="n">ui</span> \
+  <span class="o">--</span><span class="n">backend</span><span class="o">-</span><span class="n">store</span><span class="o">-</span><span class="n">uri</span> <span class="n">sqlite</span><span class="p">:</span><span class="o">///</span><span class="n">mlruns</span><span class="o">/</span><span class="n">mlflow</span><span class="o">.</span><span class="n">db</span> \
+  <span class="o">--</span><span class="n">default</span><span class="o">-</span><span class="n">artifact</span><span class="o">-</span><span class="n">root</span> <span class="n">mlruns</span><span class="o">/</span><span class="n">artifacts</span> \
+  <span class="o">--</span><span class="n">host</span> <span class="mf">127.0.0.1</span> \
+  <span class="o">--</span><span class="n">port</span> <span class="mi">5000</span>
+</code></pre></div>
+By default, this means the UI can only be accessed from the local machine, so access comes down to local users' rights configuration. If we really wanted to emulate some kind of access restriction, we could do
+<div class="highlight"><pre><span></span><code>chmod<span class="w"> </span>-R<span class="w"> </span>go-rwx<span class="w"> </span>mlruns
+</code></pre></div>
+to make it so that only the current OS user can read/write tracking data.</p>
+<h3 id="104-code-integration">10.4 Code integration</h3>
+<p>We use:</p>
+<ul>
+<li>
+<p><code>@training_run(...)</code> – decorator that wraps a training function into an MLflow run</p>
+</li>
+<li>
+<p><code>mlflow_run(...)</code> – context manager for the decorator</p>
+</li>
+</ul>
+<p><code>@training_run</code>:</p>
+<ul>
+<li>
+<p>Configures MLFlow (URI + experiment name)</p>
+</li>
+<li>
+<p>Starts and stops runs</p>
+</li>
+<li>
+<p>Logs params, metrics, artifacts, model and tags</p>
+</li>
+</ul>
+<p>The decorator is defined in <code>wine_predictor/mlflow_utils.py</code> and is used in <code>wine_predictor/modeling/train.py</code>. The updated training code uses the new decorators and builds a trainining pipeline with the provided params.</p>
+<h3 id="105-launching-a-single-run">10.5 Launching a single run</h3>
+<p>To launch a single run with <code>params.yaml</code>:
+<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>wine_predictor.modeling.train
+</code></pre></div></p>
+<h3 id="106-launching-a-grid-of-experiments">10.6 Launching a grid of experiments</h3>
+<p>To launch an entire grid of training runs:
+<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>wine_predictor.experiments
+</code></pre></div>
+All the params that define the grid can be found in <code>wine_predictor/experiments.py</code></p>
+<h2 id="11-mlflow-usage">11. MLFlow usage</h2>
+<p>To run the UI:
+<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>mlflow<span class="w"> </span>ui<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--backend-store-uri<span class="w"> </span>sqlite:///mlruns/mlflow.db<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--default-artifact-root<span class="w"> </span>mlruns/artifacts<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--host<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--port<span class="w"> </span><span class="m">5000</span>
+</code></pre></div>
+Once you've selected the experiment, you should see of all your logged runs:
+<img alt="MLFlow UI list" src="../figures/mlflow_list.png" />
+Built-in functionality allows you to search and filter by metrics, values, time created, state. You can also sort and open additional columns with all of your tracked params.  For example, you could:
+Filter runs by tags:</p>
+<ul>
+<li><code>tags.hw = "3"</code></li>
+<li><code>tags.experiment = "grid"</code></li>
+<li><code>tags.algorithm = "random_forest"</code></li>
+</ul>
+<p>Sort by:
+<code>metrics.accuracy DESC</code></p>
+<p>Select several runs and click <code>Compare</code> to see:</p>
+<ul>
+<li>parallel coordinate plots</li>
+<li>metric vs parameter plots (e.g. accuracy vs C)</li>
+<li>individual run details (artifacts, params, tags)</li>
+</ul>
+<p>MLFlow also makes it easy to visualise key metrics:
+<img alt="MLFlow UI visual" src="../figures/mlflow_vis.png" />
+Clicking on a specific run will allow you to see its details and params, as well as information on run artifacts:
+<img alt="MLFLow UI single" src="../figures/mlflow_single.png" /></p>
+<h2 id="12-dvc-ml-pipeline-and-omegaconf-configuration">12. DVC ML pipeline and OmegaConf configuration</h2>
+<h3 id="121-why-dvc">12.1 Why DVC?</h3>
+<ul>
+<li>Fairly lightweight and simple</li>
+<li>Already integrated for data versioning in previous stages of this project</li>
+<li>Supports all the essential features like stages, dependency tracking, caching, parallel execution</li>
+</ul>
+<h3 id="122-dvc-pipeline-setup">12.2 DVC pipeline setup</h3>
+<p>In practice, we implement the pipeline by changing <code>dvc.yaml</code> from a single <code>train</code> stage to <code>train</code>-&gt;<code>evaluate</code>-&gt;<code>notify</code>:
+<div class="highlight"><pre><span></span><code><span class="nt">stages</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">train</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">poetry run python -m wine_predictor.modeling.train --model logreg</span>
+<span class="w">    </span><span class="nt">deps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data/external/WineQT.csv</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wine_predictor/dataset.py</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wine_predictor/features.py</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wine_predictor/modeling/train.py</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wine_predictor/config.py</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">configs/train/base.yaml</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">configs/model/logreg.yaml</span>
+<span class="w">    </span><span class="nt">outs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">models/baseline_model.joblib</span>
+<span class="w">    </span><span class="nt">metrics</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">metrics.json</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="w">  </span><span class="nt">evaluate</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">poetry run python -m wine_predictor.pipelines.evaluate</span>
+<span class="w">    </span><span class="nt">deps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">models/baseline_model.joblib</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wine_predictor/pipelines/evaluate.py</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wine_predictor/dataset.py</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wine_predictor/features.py</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wine_predictor/config.py</span>
+<span class="w">    </span><span class="nt">metrics</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">reports/metrics_detailed.json</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="w">  </span><span class="nt">notify</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">poetry run python -m wine_predictor.pipelines.notify</span>
+<span class="w">    </span><span class="nt">deps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reports/metrics_detailed.json</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wine_predictor/pipelines/notify.py</span>
+<span class="w">    </span><span class="nt">always_changed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+We set <code>always_changed: true</code> for <code>notify</code> stage to make sure it actually runs every time, even when we're reproducing existing results.</p>
+<p>This configuration results in a fairly simple DAG:
+<img alt="DVC DAG" src="../figures/dvc_dag.png" /></p>
+<h3 id="123-dvc-pipeline-usage">12.3 DVC pipeline usage</h3>
+<p>In order to run the pipeline with all its stages, run
+<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>dvc<span class="w"> </span>repro
+</code></pre></div>
+This will run <code>train</code>, <code>evaluate</code> and <code>notify</code> sequentially. Initiating another run without changes will lead to the following behaviour:
+<img alt="DVC Cache" src="../figures/dvc_cache.png" />
+Caching will ensure unchanged stages (<code>train</code>, <code>evaluate</code>) do not run again. Instead, only the pipeline completion notification stage <code>notify</code> will run to show results.</p>
+<p>DVC also supports running multiple jobs in parallel
+<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>dvc<span class="w"> </span>repro<span class="w"> </span>-j<span class="w"> </span><span class="m">2</span>
+</code></pre></div>
+although our pipeline is not suited to parallel execution, as it lacks independent stages.</p>
+<p>The console output of the various stages is used in conjunction with the <code>notify</code> stage to keep track of execution, errors and results.</p>
+<h3 id="124-why-omegaconf">12.4 Why OmegaConf?</h3>
+<ul>
+<li>Easy to use with YAML files</li>
+<li>Supports the necessary features</li>
+<li>Pretty lightweight and easy to add to our existing code</li>
+</ul>
+<h3 id="125-omegaconf-usage">12.5 OmegaConf usage</h3>
+<ul>
+<li>Loading base training configuration from <code>configs/train/base.yaml</code></li>
+<li>Loading algorithm-specific configurations from <code>configs/model/*.yaml</code></li>
+<li>Providing these configs to the training code in a composable way</li>
+</ul>
+<p>Configs are stored in a dedicated <code>configs/</code> directory:
+<div class="highlight"><pre><span></span><code>configs/
+├── train
+│   └── base.yaml
+└── model
+    ├── logreg.yaml
+    ├── random_forest.yaml
+    └── gradient_boosting.yaml
+</code></pre></div>
+<code>wine_predictor/config.py</code> integrates OmegaConf and performs extra validation.</p>
+<p>We also add some validation on top to make sure configs are checked for broken values.</p>
+<p>Overall, we're using the following hierarchy: base -&gt; model-type -&gt; per-run overrides.</p>
+<h2 id="13-clearml-server-setup">13. ClearML Server setup</h2>
+<h3 id="131-local-server-via-docker-compose">13.1 Local server via docker-compose</h3>
+<p>We use the <code>docker-compose.yml</code> recommended by ClearML docs.
+This makes it easy to launch the server with
+<div class="highlight"><pre><span></span><code>docker-compose<span class="w"> </span>up
+</code></pre></div>
+For reference, the <code>docker-compose.yml</code> is included below:
+<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.6&quot;</span>
+<span class="nt">services</span><span class="p">:</span>
+
+<span class="w">  </span><span class="nt">apiserver</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apiserver</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clearml-apiserver</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clearml/server:latest</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/clearml/logs:/var/log/clearml</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/clearml/config:/opt/clearml/config</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/clearml/data/fileserver:/mnt/fileserver</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mongo</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">elasticsearch</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fileserver</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">CLEARML_ELASTIC_SERVICE_HOST</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">elasticsearch</span>
+<span class="w">      </span><span class="nt">CLEARML_ELASTIC_SERVICE_PORT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9200</span>
+<span class="w">      </span><span class="nt">CLEARML_MONGODB_SERVICE_HOST</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mongo</span>
+<span class="w">      </span><span class="nt">CLEARML_MONGODB_SERVICE_PORT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">27017</span>
+<span class="w">      </span><span class="nt">CLEARML_REDIS_SERVICE_HOST</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis</span>
+<span class="w">      </span><span class="nt">CLEARML_REDIS_SERVICE_PORT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6379</span>
+<span class="w">      </span><span class="nt">CLEARML_SERVER_DEPLOYMENT_TYPE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">linux</span>
+<span class="w">      </span><span class="nt">CLEARML__apiserver__pre_populate__enabled</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">      </span><span class="nt">CLEARML__apiserver__pre_populate__zip_files</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/opt/clearml/db-pre-populate&quot;</span>
+<span class="w">      </span><span class="nt">CLEARML__apiserver__pre_populate__artifacts_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/mnt/fileserver&quot;</span>
+<span class="w">      </span><span class="nt">CLEARML__services__async_urls_delete__enabled</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">      </span><span class="nt">CLEARML__services__async_urls_delete__fileserver__url_prefixes</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;[${CLEARML_FILES_HOST:-}]&quot;</span>
+<span class="w">      </span><span class="nt">CLEARML__secure__credentials__services_agent__user_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${CLEARML_AGENT_ACCESS_KEY:-}</span>
+<span class="w">      </span><span class="nt">CLEARML__secure__credentials__services_agent__user_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${CLEARML_AGENT_SECRET_KEY:-}</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8008:8008&quot;</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend</span>
+
+<span class="w">  </span><span class="nt">elasticsearch</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clearml-elastic</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">bootstrap.memory_lock</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">      </span><span class="nt">cluster.name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clearml</span>
+<span class="w">      </span><span class="nt">cluster.routing.allocation.node_initial_primaries_recoveries</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;500&quot;</span>
+<span class="w">      </span><span class="nt">cluster.routing.allocation.disk.watermark.low</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500mb</span>
+<span class="w">      </span><span class="nt">cluster.routing.allocation.disk.watermark.high</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500mb</span>
+<span class="w">      </span><span class="nt">cluster.routing.allocation.disk.watermark.flood_stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500mb</span>
+<span class="w">      </span><span class="nt">discovery.type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;single-node&quot;</span>
+<span class="w">      </span><span class="nt">http.compression_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;7&quot;</span>
+<span class="w">      </span><span class="nt">node.name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clearml</span>
+<span class="w">      </span><span class="nt">reindex.remote.whitelist</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&#39;*.*&#39;&quot;</span>
+<span class="w">      </span><span class="nt">xpack.security.enabled</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span>
+<span class="w">    </span><span class="nt">ulimits</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">memlock</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">soft</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-1</span>
+<span class="w">        </span><span class="nt">hard</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-1</span>
+<span class="w">      </span><span class="nt">nofile</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">soft</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">65536</span>
+<span class="w">        </span><span class="nt">hard</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">65536</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">elasticsearch:8.17.0</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/clearml/data/elastic_7:/usr/share/elasticsearch/data</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/usr/share/elasticsearch/logs</span>
+
+<span class="w">  </span><span class="nt">fileserver</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fileserver</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clearml-fileserver</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clearml/server:latest</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">CLEARML__fileserver__delete__allow_batch</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/clearml/logs:/var/log/clearml</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/clearml/data/fileserver:/mnt/fileserver</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/clearml/config:/opt/clearml/config</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8081:8081&quot;</span>
+
+<span class="w">  </span><span class="nt">mongo</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clearml-mongo</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mongo:7.0.22</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--setParameter internalQueryMaxBlockingSortMemoryUsageBytes=196100200</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/clearml/data/mongo_4/db:/data/db</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/clearml/data/mongo_4/configdb:/data/configdb</span>
+
+<span class="w">  </span><span class="nt">redis</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clearml-redis</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis:7.4.1</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/clearml/data/redis:/data</span>
+
+<span class="w">  </span><span class="nt">webserver</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">webserver</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clearml-webserver</span>
+<span class="w">    </span><span class="c1"># environment:</span>
+<span class="w">    </span><span class="c1">#  CLEARML_SERVER_SUB_PATH : clearml-web # Allow Clearml to be served with a URL path prefix.</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clearml/server:latest</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apiserver</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8080:80&quot;</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend</span>
+
+<span class="w">  </span><span class="nt">async_delete</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apiserver</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mongo</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">elasticsearch</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fileserver</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">async_delete</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clearml/server:latest</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">CLEARML_ELASTIC_SERVICE_HOST</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">elasticsearch</span>
+<span class="w">      </span><span class="nt">CLEARML_ELASTIC_SERVICE_PORT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9200</span>
+<span class="w">      </span><span class="nt">CLEARML_MONGODB_SERVICE_HOST</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mongo</span>
+<span class="w">      </span><span class="nt">CLEARML_MONGODB_SERVICE_PORT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">27017</span>
+<span class="w">      </span><span class="nt">CLEARML_REDIS_SERVICE_HOST</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis</span>
+<span class="w">      </span><span class="nt">CLEARML_REDIS_SERVICE_PORT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6379</span>
+<span class="w">      </span><span class="nt">PYTHONPATH</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/clearml/apiserver</span>
+<span class="w">      </span><span class="nt">CLEARML__services__async_urls_delete__fileserver__url_prefixes</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;[${CLEARML_FILES_HOST:-}]&quot;</span>
+<span class="w">    </span><span class="nt">entrypoint</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python3</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-m</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jobs.async_urls_delete</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--fileserver-host</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://fileserver:8081</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/clearml/logs:/var/log/clearml</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/clearml/config:/opt/clearml/config</span>
+
+<span class="w">  </span><span class="nt">agent-services</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clearml-agent-services</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clearml/clearml-agent-services:latest</span>
+<span class="w">    </span><span class="nt">deploy</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">restart_policy</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on-failure</span>
+<span class="w">    </span><span class="nt">privileged</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">CLEARML_HOST_IP</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${CLEARML_HOST_IP}</span>
+<span class="w">      </span><span class="nt">CLEARML_WEB_HOST</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${CLEARML_WEB_HOST:-}</span>
+<span class="w">      </span><span class="nt">CLEARML_API_HOST</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://apiserver:8008</span>
+<span class="w">      </span><span class="nt">CLEARML_FILES_HOST</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${CLEARML_FILES_HOST:-}</span>
+<span class="w">      </span><span class="nt">CLEARML_API_ACCESS_KEY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${CLEARML_AGENT_ACCESS_KEY:-$CLEARML_API_ACCESS_KEY}</span>
+<span class="w">      </span><span class="nt">CLEARML_API_SECRET_KEY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${CLEARML_AGENT_SECRET_KEY:-$CLEARML_API_SECRET_KEY}</span>
+<span class="w">      </span><span class="nt">CLEARML_AGENT_GIT_USER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${CLEARML_AGENT_GIT_USER}</span>
+<span class="w">      </span><span class="nt">CLEARML_AGENT_GIT_PASS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${CLEARML_AGENT_GIT_PASS}</span>
+<span class="w">      </span><span class="nt">CLEARML_AGENT_UPDATE_VERSION</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${CLEARML_AGENT_UPDATE_VERSION:-&gt;=0.17.0}</span>
+<span class="w">      </span><span class="nt">CLEARML_AGENT_DEFAULT_BASE_DOCKER</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ubuntu:18.04&quot;</span>
+<span class="w">      </span><span class="nt">AWS_ACCESS_KEY_ID</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${AWS_ACCESS_KEY_ID:-}</span>
+<span class="w">      </span><span class="nt">AWS_SECRET_ACCESS_KEY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${AWS_SECRET_ACCESS_KEY:-}</span>
+<span class="w">      </span><span class="nt">AWS_DEFAULT_REGION</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${AWS_DEFAULT_REGION:-}</span>
+<span class="w">      </span><span class="nt">AZURE_STORAGE_ACCOUNT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${AZURE_STORAGE_ACCOUNT:-}</span>
+<span class="w">      </span><span class="nt">AZURE_STORAGE_KEY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${AZURE_STORAGE_KEY:-}</span>
+<span class="w">      </span><span class="nt">GOOGLE_APPLICATION_CREDENTIALS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${GOOGLE_APPLICATION_CREDENTIALS:-}</span>
+<span class="w">      </span><span class="nt">CLEARML_WORKER_ID</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;clearml-services&quot;</span>
+<span class="w">      </span><span class="nt">CLEARML_AGENT_DOCKER_HOST_MOUNT</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/opt/clearml/agent:/root/.clearml&quot;</span>
+<span class="w">      </span><span class="nt">SHUTDOWN_IF_NO_ACCESS_KEY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/var/run/docker.sock:/var/run/docker.sock</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/clearml/agent:/root/.clearml</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apiserver</span>
+<span class="w">    </span><span class="nt">entrypoint</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<span class="w">      </span><span class="no">bash -c &quot;curl --retry 10 --retry-delay 10 --retry-connrefused &#39;http://apiserver:8008/debug.ping&#39; &amp;&amp; /usr/agent/entrypoint.sh&quot;</span>
+
+<span class="nt">networks</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">backend</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bridge</span>
+<span class="w">  </span><span class="nt">frontend</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bridge</span>
+</code></pre></div></p>
+<h3 id="132-clearml-components">13.2 ClearML components</h3>
+<p>Docker launches the standard services needed for ClearML:
+- clearml-webserver
+- clearml-apiserver
+- clearml-fileserver
+- async_delete
+- MongoDB
+- Elasticsearch
+- Redis</p>
+<h3 id="133-authentication">13.3 Authentication</h3>
+<p>We create a user in the ClearML UI, generate an API key. Then, inside the project directory we can run
+<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>add<span class="w"> </span>clearml
+poetry<span class="w"> </span>run<span class="w"> </span>clearml-init
+</code></pre></div>
+and paste the credentials for the local server. We do not configure any additional access restrictions.
+<img alt="ClearML key" src="../figures/clearml_key.png" /></p>
+<h2 id="14-clearml-integration">14. ClearML integration</h2>
+<h3 id="141-code-integration">14.1 Code integration</h3>
+<p>ClearML integration is implemented in <code>wine_predictor/clearml_utils.py</code>, including helper functions and a decorator. This is done mostly to ensure actual pipeline code stays simple and readable.</p>
+<h3 id="142-clearml-tracking">14.2 ClearML tracking</h3>
+<p>We log parameters to ClearML:
+<img alt="ClearML logging" src="../figures/clearml_pipeline_data.png" />
+<img alt="ClearML logging config" src="../figures/clearml_configuration.png" />
+We also track and plot training metrics (in this case, accuracy):
+<img alt="ClearML accuracy" src="../figures/clearml_plot.png" /></p>
+<h3 id="144-clearml-model-registry">14.4 ClearML model registry</h3>
+<p>We track our models with ClearML model registry functionality, enabling model versioning and metadata tracking:
+<img alt="ClearML model" src="../figures/clearml_model.png" /></p>
+<h3 id="143-comparing-experiments">14.3 Comparing experiments</h3>
+<p>We can easily visualise and compare metrics across experiments in the UI:
+<img alt="ClearML metrics comparison" src="../figures/clearml_compare_metrics.png" />
+The same goes for comparing models in the registry:
+<img alt="ClearML models comparison" src="../figures/clearml_compare_models.png" /></p>
+<h2 id="151-clearml-pipeline">15.1 ClearML pipeline</h2>
+<p>ClearML pipeline is implemented in  <code>wine_predictor/pipelines/clearml_pipeline.py</code>. It contains 3 steps, mirroring our previous DVC pipeline:
+- <code>step_train</code>
+- <code>step_evaluate</code>
+- <code>step_notify</code></p>
+<p>We run it locally with
+<div class="highlight"><pre><span></span><code><span class="n">pipe</span><span class="o">.</span><span class="n">start_locally</span><span class="p">(</span><span class="n">run_pipeline_steps_locally</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+<img alt="ClearML pipeline" src="../figures/clearml_pipeline.png" /></p>
+<p>ClearML UI shows all 3 stages, their status and timings, as well as artifacts.</p>
+<h2 id="16-mkdocs-setup">16. MKDocs setup</h2>
+<p>We use MkDocsto build a documentation website from Markdown files inside <code>docs/</code>.
+Key files:</p>
+<ul>
+<li><code>mkdocs.ym</code>l - main documentation configuration (navigation, theme, plugins)</li>
+<li><code>docs/index.md</code> - documentation homepage</li>
+<li><code>docs/deployment.md</code> - deployment guide</li>
+<li><code>docs/usage.md</code> - usage examples</li>
+<li><code>docs/reproducibility.md</code> - step-by-step reproduction guide</li>
+<li><code>docs/experiments/index.md</code> - experiments section landing page</li>
+<li><code>docs/api/index.md</code> - API reference landing page</li>
+</ul>
+<p>Local usage:
+<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>mkdocs<span class="w"> </span>build
+poetry<span class="w"> </span>run<span class="w"> </span>mkdocs<span class="w"> </span>serve
+</code></pre></div></p>
+<p><img alt="MKDocs home" src="../figures/mkdocs_home.png" /></p>
+<h2 id="17-api-reference-geneartion">17. API reference geneartion</h2>
+<p>API reference is generated automatically when building documentation:
+- <code>mkdocstrings</code> renders API docs from Python modules
+- <code>mkdocs-gen-files</code> generates Markdown pages for each module</p>
+<p>Reference pages are generated by <code>scripts/gen_ref_pages.py</code>
+<img alt="MKDocs API" src="../figures/mkdocs_api.png" /></p>
+<h2 id="18-experiment-report">18. Experiment report</h2>
+<p><code>docs/experiments/experiments.md</code> contains a report with table and plot comparisons of existing MLFlow experiments. Note that MLFlow data is not accessible to Github Actions, so Github Pages will show a minimal report.
+To run locally:
+<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>generate-experiment-report
+</code></pre></div>
+<img alt="Experiment report 1" src="../figures/report_1.png" />
+<img alt="Experiment report 1" src="../figures/report_2.png" /></p>
+<p>In order to make it automated and reproducible, we've added a <code>doc_report</code> stage to DVC, so you can just run
+<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>dvc<span class="w"> </span>repro
+</code></pre></div></p>
+<h2 id="19-github-pages-publication-via-github-actions">19. Github Pages publication via Github Actions</h2>
+<p>Documentation is deployed automatically via a workflow file <code>.github/workflows/docs.yml</code>. It follows these steps:
+- Install poetry
+- Install dependencies
+- Generate experiment report
+- Build docs
+- Deploy to Github Pages</p>
+<h2 id="20-reproducing-everything">20. Reproducing everything</h2>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Clone</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/RageAgainstTheAssembly/EPML-ITMO
+<span class="nb">cd</span><span class="w"> </span>EPML-ITMO
+git<span class="w"> </span>checkout<span class="w"> </span>main_hw3
+
+<span class="c1"># 2. Poetry</span>
+pip<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>poetry
+poetry<span class="w"> </span>config<span class="w"> </span>virtualenvs.in-project<span class="w"> </span><span class="nb">true</span>
+
+<span class="c1"># 3. Dependencies</span>
+poetry<span class="w"> </span>install<span class="w"> </span>--with<span class="w"> </span>docs
+
+<span class="c1"># 4. Install pre-commit hooks and run them</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pre-commit<span class="w"> </span>install
+poetry<span class="w"> </span>run<span class="w"> </span>pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
+
+<span class="c1"># 5. Get data and model artifacts from DVC remote (this assumes you have access to the remote)</span>
+poetry<span class="w"> </span>run<span class="w"> </span>dvc<span class="w"> </span>remote<span class="w"> </span>modify<span class="w"> </span>local_remote<span class="w"> </span>url<span class="w"> </span>&lt;insert<span class="w"> </span>your<span class="w"> </span>remote<span class="w"> </span>path&gt;
+poetry<span class="w"> </span>run<span class="w"> </span>dvc<span class="w"> </span>pull
+
+<span class="c1"># 6. Reproduce experiments</span>
+poetry<span class="w"> </span>run<span class="w"> </span>dvc<span class="w"> </span>repro
+
+<span class="c1"># 7. See docs</span>
+poetry<span class="w"> </span>run<span class="w"> </span>mkdocs<span class="w"> </span>serve
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
