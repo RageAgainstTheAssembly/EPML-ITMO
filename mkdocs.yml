@@ -1,0 +1,44 @@
+site_name: EPML ITMO — Wine Predictor
+repo_name: RageAgainstTheAssembly/EPML-ITMO
+repo_url: https://github.com/RageAgainstTheAssembly/EPML-ITMO
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - toc.integrate
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+
+plugins:
+  - search
+  - gen-files:
+      scripts:
+        - scripts/gen_ref_pages.py
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          options:
+            show_source: false
+            show_root_heading: true
+
+nav:
+  - Home: index.md
+  - Deployment: deployment.md
+  - Usage: usage.md
+  - Experiments:
+      - Overview: experiments/index.md
+      - Comparison Report: experiments/experiments.md
+  - API Reference:
+    - Overview: api/index.md
+    - Reference: reference/SUMMARY.md
+  - HW5 Report: hw5_report.md
+  - Reproducibility: reproducibility.md

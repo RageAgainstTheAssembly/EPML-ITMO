@@ -21,16 +21,16 @@ stages:
       size: 4215
     - path: wine_predictor/dataset.py
       hash: md5
-      md5: 408c6e356f55a9af4d8be26e6a8f1be7
-      size: 864
+      md5: c1da790f5ae4ce045f68f79d07befe54
+      size: 869
     - path: wine_predictor/features.py
       hash: md5
       md5: ec9e4ddb5a779d9d607a104aae9e6110
       size: 418
     - path: wine_predictor/modeling/train.py
       hash: md5
-      md5: 5d6ce8c2cb5182fb97ad62557f640e62
-      size: 5167
+      md5: bfeefed1c8411ac6eb61b4fcfeed609c
+      size: 5248
     outs:
     - path: metrics.json
       hash: md5
@@ -53,16 +53,16 @@ stages:
       size: 4215
     - path: wine_predictor/dataset.py
       hash: md5
-      md5: 408c6e356f55a9af4d8be26e6a8f1be7
-      size: 864
+      md5: c1da790f5ae4ce045f68f79d07befe54
+      size: 869
     - path: wine_predictor/features.py
       hash: md5
       md5: ec9e4ddb5a779d9d607a104aae9e6110
       size: 418
     - path: wine_predictor/pipelines/evaluate.py
       hash: md5
-      md5: 9df694f16197426e6ef7f164c5162dd7
-      size: 1721
+      md5: 09b29f88bbcc8b44da4cbbab0cdd6a45
+      size: 3630
     outs:
     - path: reports/metrics_detailed.json
       hash: md5
@@ -77,5 +77,26 @@ stages:
       size: 1628
     - path: wine_predictor/pipelines/notify.py
       hash: md5
-      md5: cd1ab3f55486a168675f50f4164bd2fe
-      size: 946
+      md5: 9790311be990cfa487a97755ef4ea49f
+      size: 2365
+  doc_report:
+    cmd: poetry run generate-experiment-report
+    deps:
+    - path: mlruns/mlflow.db
+      hash: md5
+      md5: 47997e5b5d4d7c0e522e50f2c4796ac5
+      size: 602112
+    - path: wine_predictor/reporting/generate_experiment_report.py
+      hash: md5
+      md5: 9934afdbb0064ba750108ff54e3a41df
+      size: 3531
+    outs:
+    - path: docs/experiments/experiments.md
+      hash: md5
+      md5: fb574703865ab467dea498d85ada01c9
+      size: 2826
+    - path: docs/experiments/figures
+      hash: md5
+      md5: 4be1b2157d837b172d49523d56269364.dir
+      size: 54880
+      nfiles: 3

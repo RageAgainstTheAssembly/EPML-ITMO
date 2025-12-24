@@ -17,6 +17,10 @@ DEFAULT_CLEARML_PROJECT = "EPML-ITMO/HW5-ClearML"
 DEFAULT_CLEARML_TASK_TYPE = "training"
 
 
+def _normalize_project_name(name: str) -> str:
+    return "/".join(part.strip() for part in name.split("/"))
+
+
 @dataclass(frozen=True)
 class ClearMLTaskHandle:
     task: Task
@@ -89,6 +93,7 @@ def init_clearml_task(
                     logger.debug("ClearML: failed to add tags", exc_info=True)
             return ClearMLTaskHandle(task=current, created_new_task=False)
 
+    project_name = _normalize_project_name(project_name)
     task = Task.init(
         project_name=project_name,
         task_name=task_name,
