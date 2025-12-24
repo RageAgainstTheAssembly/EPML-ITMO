@@ -20,7 +20,8 @@ poetry run dvc repro
 poetry run generate-experiment-report
 ```
 
-## 4. Build docs
+## 4. Build and serve docs
 ```bash
 poetry run mkdocs build
+poetry run mkdocs serve
 ```
