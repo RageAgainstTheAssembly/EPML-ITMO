@@ -26,8 +26,8 @@ jobs:
       - name: Install dependencies
         run: poetry install --with docs
 
-      - name: Reproduce pipeline (incl. docs report)
-        run: poetry run dvc repro
+      - name: Gen report
+        run: poetry run generate-experiment-report
 
       - name: Build docs
         run: poetry run mkdocs build
