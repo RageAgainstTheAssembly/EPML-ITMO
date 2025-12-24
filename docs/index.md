@@ -17,3 +17,4 @@ poetry install --with docs
 poetry run dvc repro
 poetry run python -m wine_predictor.reporting.generate_experiment_report
 poetry run mkdocs serve
+```
